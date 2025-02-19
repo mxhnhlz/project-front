@@ -31,36 +31,47 @@
 /* Поиск */
 .searchContainer {
   position: fixed;
-  top: 4.19vh;
-  left: 0;
+  top: 5.1vh;
   width: 100%;
   height: 3vh;
   background: white;
   display: flex;
   align-items: center;
+  justify-content: center;
   z-index: 10;
   padding: 0 0 10px 0;
 }
-.searchIcon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-70%);
-  background: none;
-  border: none;
-  cursor: pointer;
+
+.searchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 84%;
 }
 
 .search {
-  padding: 5px 30px 5px 40px;
-  width: 70%;
-  margin-right: 5px;
+  width: 100%;
+  padding: 5px 40px 5px 40px;
   border-radius: 35px;
   border: none;
   background-color: #f8f9fe;
   box-shadow: none;
-  height: 100%;
+  height: 3.3vh;
+  font-size: 14px;
 }
+
+.searchIcon {
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
 .cartButton {
   background: none;
   border: none;
@@ -72,7 +83,6 @@
   height: 24px;
   object-fit: contain;
 }
-
 /* Товары */
 .products {
   flex-grow: 1;
@@ -87,8 +97,8 @@
 }
 .productContainer {
   display: flex;
-  width: 100%; /* Фиксированная ширина */
-  height: 118px; /* Фиксированная высота */
+  width: 100%;
+  height: 118px;
   border-radius: 16px;
   overflow: hidden;
   flex-shrink: 0;
@@ -145,34 +155,54 @@
   text-transform: none;
 }
 
+/*footer*/
 .footer {
   height: 8.74vh;
   background-color: #f8f8f8;
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 14px;
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   z-index: 10;
-  padding: 10px 0;
+  padding: 5px 0;
 }
 
 .items2 {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  width: 100%;
 }
+
 .buttonFooter {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   cursor: pointer;
   font-size: 12px;
+  flex: 1;
+  height: 100%;
+  position: relative;
+  padding-bottom: 15px;
 }
-/* эффектыыыы */
+
+.footerImg {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.footerSpan {
+  color: #71727a;
+  font-size: 10px;
+  position: absolute;
+  bottom: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+}
