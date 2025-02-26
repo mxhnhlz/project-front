@@ -1,6 +1,17 @@
 import React, { useState } from 'react'
-import styles from './main.module.css'
 import { Button } from '@mui/material'
+
+import MyCalendar from './calendar/calendar'
+
+import styles from './main.module.css'
+
+import SearchIcon from './icons/SearchIcon'
+import CartButton from './icons/cartButton'
+import FavButton from './icons/favButton'
+import MainMenu from './icons/mainMenu'
+import ProfileButton from './icons/profileButton'
+import CreateButton from './icons/CreateButton'
+import MessagesButton from './icons/messagesButton'
 
 function Main() {
   const products = [
@@ -17,6 +28,7 @@ function Main() {
   ]
 
   const [searchTerm, setSearchTerm] = useState('')
+  const [openCalendar, setOpenCalendar] = useState(null)
 
   const filteredProducts = products.filter(
     (product) =>
@@ -24,32 +36,42 @@ function Main() {
       product.description.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
+  const handleRentButtonClick = (index) => {
+    setOpenCalendar(openCalendar === index ? null : index)
+  }
+
+  const handleCloseCalendar = () => {
+    setOpenCalendar(null)
+  }
+
   return (
     <div className={styles.main}>
-      {/* header */}
-      <div>
-        <header className={styles.header}>
-          <h1>Название бота</h1>
-        </header>
-      </div>
-
-      {/* search */}
-      <div className={styles.searchContainer}>
-        <div className={styles.searchWrapper}>
-          <button className={styles.searchIcon}>
-            <img src='./images/search.svg' alt='Search' />
-          </button>
-          <input
-            type='text'
-            placeholder='Поиск по каталогу'
-            className={styles.search}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+      <div className={styles.searchCartWrapper}>
+        {/* header */}
+        <div>
+          <header className={styles.header}>
+            <h1>Название бота</h1>
+          </header>
         </div>
-        <button className={styles.cartButton}>
-          <img src='./images/cart.svg' alt='cart' />
-        </button>
+
+        {/* search */}
+        <div className={styles.searchContainer}>
+          <div className={styles.searchWrapper}>
+            <button className={styles.searchIcon}>
+              <SearchIcon />
+            </button>
+            <input
+              type='text'
+              placeholder='Поиск по каталогу'
+              className={styles.search}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <button className={styles.cartButton}>
+            <CartButton />
+          </button>
+        </div>
       </div>
 
       {/* Товары */}
@@ -80,6 +102,7 @@ function Main() {
                         color: 'white',
                       },
                     }}
+                    onClick={() => handleRentButtonClick(index)}
                   >
                     Арендовать
                   </Button>
@@ -92,43 +115,67 @@ function Main() {
         )}
       </div>
 
+      {/* Модальное окно */}
+
+      {openCalendar !== null && (
+        <div className={styles.modalContainer}>
+          {/* Кнопка "Отменить" */}
+          <div className={styles.cancelButtonContainer}>
+            <button
+              className={styles.cancelButton}
+              onClick={handleCloseCalendar}
+            >
+              Отменить
+            </button>
+          </div>
+          <div className={styles.calendarWrapper}>
+            <MyCalendar
+              openCalendar={openCalendar}
+              handleCloseCalendar={handleCloseCalendar}
+            />
+          </div>
+          <div className={styles.modalActions}>
+            <Button
+              variant='outlined'
+              sx={{
+                borderRadius: '12px',
+                borderColor: '#006FFD',
+                color: '#006FFD',
+                padding: '8px 50px',
+                '&:hover': {
+                  backgroundColor: '#006FFD',
+                  color: 'white',
+                },
+              }}
+              className='sendRequestButton'
+            >
+              Отправить запрос арендодателю
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* footer */}
       <div className={styles.footer}>
         <div className={styles.items2}>
           <button className={styles.buttonFooter}>
-            <img
-              src='./images/mainMenu.svg'
-              alt=''
-              className={styles.footerImg}
-            />
+            <MainMenu />
             <span className={styles.footerSpan}>Главная</span>
           </button>
           <button className={styles.buttonFooter}>
-            <img src='./images/fav.svg' alt='' className={styles.footerImg} />
+            <FavButton />
             <span className={styles.footerSpan}>Избранное</span>
           </button>
           <button className={styles.buttonFooter}>
-            <img
-              src='./images/create.svg'
-              alt=''
-              className={styles.footerImg}
-            />
+            <CreateButton />
             <span className={styles.footerSpan}>Создать</span>
           </button>
           <button className={styles.buttonFooter}>
-            <img
-              src='./images/messages.svg'
-              alt=''
-              className={styles.footerImg}
-            />
+            <MessagesButton />
             <span className={styles.footerSpan}>Сообщения</span>
           </button>
           <button className={styles.buttonFooter}>
-            <img
-              src='./images/profile.svg'
-              alt=''
-              className={styles.footerImg}
-            />
+            <ProfileButton />
             <span className={styles.footerSpan}>Профиль</span>
           </button>
         </div>

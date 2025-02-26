@@ -1,75 +1,70 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-
 .main {
   font-family: 'Inter', serif;
   margin: 0;
   padding: 0;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 /* header */
+
 .header {
-  height: 4.19vh;
   text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
   width: 100%;
-  z-index: 10;
+  height: 30px;
 }
 
 .header h1 {
   font-size: 14px;
-  margin: 0;
 }
 
 /* Поиск */
 .searchContainer {
-  position: fixed;
-  top: 5.1vh;
+  position: sticky;
+  top: 60px;
   width: 100%;
-  height: 3vh;
-  background: white;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
-  padding: 0 0 10px 0;
 }
 
 .searchWrapper {
-  position: relative;
   display: flex;
   align-items: center;
   width: 84%;
 }
-
+.searchCartWrapper {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(3px);
+}
 .search {
   width: 100%;
   padding: 5px 40px 5px 40px;
-  border-radius: 35px;
+  border-radius: 24px;
   border: none;
   background-color: #f8f9fe;
-  box-shadow: none;
-  height: 3.3vh;
+  height: 30px;
   font-size: 14px;
 }
 
 .searchIcon {
-  position: absolute;
-  left: 5px;
-  top: 50%;
-  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
-  width: 20px;
-  height: 20px;
+  position: absolute;
+}
+
+.svgImg {
+  width: 100%;
+  height: auto;
 }
 
 .cartButton {
@@ -78,22 +73,19 @@
   cursor: pointer;
 }
 
-.cartButton img {
+.cartButtonImg {
   width: 24px;
   height: 24px;
-  object-fit: contain;
 }
+
 /* Товары */
 .products {
   flex-grow: 1;
-  margin-top: calc(4.19vh + 3vh);
-  margin-bottom: 8.74vh;
-  overflow-y: auto;
-  padding: 10px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 5px;
+  overflow-y: auto;
 }
 .productContainer {
   display: flex;
@@ -101,13 +93,11 @@
   height: 118px;
   border-radius: 16px;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
 .productImg {
-  width: 35%;
+  width: 34%;
   height: 100%;
-  position: relative;
 }
 
 .productImg img {
@@ -122,14 +112,15 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 10px 20px 10px 20px;
+  padding-left: 15px;
 }
 
 .productName h1 {
   font-size: 14px;
   margin: 0;
   font-weight: bold;
-  margin-bottom: 4px;
+  margin-top: 15px;
+  margin-bottom: 5px;
 }
 
 .productName p {
@@ -153,56 +144,98 @@
   height: 40px;
   font-size: 12px;
   text-transform: none;
+  margin-right: 15px;
+  margin-bottom: 5px;
 }
-
-/*footer*/
+/* footer */
 .footer {
-  height: 8.74vh;
-  background-color: #f8f8f8;
-  display: flex;
-  justify-content: center;
-  position: fixed;
+  position: sticky;
   bottom: 0;
-  left: 0;
   width: 100%;
-  z-index: 10;
-  padding: 5px 0;
+  background-color: rgba(255, 255, 255, 1);
+  padding: 7px 3px;
 }
 
 .items2 {
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
   width: 100%;
+  height: 100%;
 }
 
 .buttonFooter {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 12px;
-  flex: 1;
   height: 100%;
-  position: relative;
-  padding-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .footerImg {
   width: 24px;
   height: 24px;
-  object-fit: contain;
 }
 
 .footerSpan {
   color: #71727a;
   font-size: 10px;
+}
+
+/* calendar */
+.modalContainer {
+  position: sticky;
+  background-color: white;
+  padding: 10px;
+  bottom: 0;
+  z-index: 1;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.cancelButton {
+  top: 10px;
+  right: 10px;
   position: absolute;
-  bottom: 1px;
-  left: 50%;
-  transform: translateX(-50%);
+  background: none;
+  border: none;
+  color: #71727a;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cancelButtonContainer {
+  margin-bottom: 15px;
+}
+
+.cancelButton:hover {
+  text-decoration: none;
+}
+
+.calendarWrapper {
+  margin-bottom: 20px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: center;
+}
+
+.modalActions button {
+  width: 100%;
+  border-radius: 12px;
+  text-transform: none;
+}
+
+.cal {
+  background: white;
+  border: 0px solid #a0a096;
+  font-family: 'Inter', serif;
+  line-height: 1.125em;
 }
