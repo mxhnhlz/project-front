@@ -1,48 +1,49 @@
-import React, { useState } from 'react'
-import { Button } from '@mui/material'
+import React, { useState } from "react";
+import { Button } from "@mui/material";
 
-import MyCalendar from './calendar/calendar'
+import MyCalendar from "./calendar/calendar";
 
-import styles from './main.module.css'
+import styles from "./main.module.css";
 
-import SearchIcon from './icons/SearchIcon'
-import CartButton from './icons/cartButton'
-import FavButton from './icons/favButton'
-import MainMenu from './icons/mainMenu'
-import ProfileButton from './icons/profileButton'
-import CreateButton from './icons/CreateButton'
-import MessagesButton from './icons/messagesButton'
+import SearchIcon from "./icons/SearchIcon";
+import CartButton from "./icons/cartButton";
+import FavButton from "./icons/favButton";
+import MainMenu from "./icons/mainMenu";
+import ProfileButton from "./icons/profileButton";
+import CreateButton from "./icons/CreateButton";
+import MessagesButton from "./icons/messagesButton";
+import ItemList from "./itemList/itemList";
 
 function Main() {
   const products = [
-    { name: 'Товар 1', description: 'Краткое описание', price: '999 ₽' },
-    { name: 'Товар 2', description: 'Краткое описание', price: '1200 ₽' },
-    { name: 'Товар 3', description: 'Краткое описание', price: '800 ₽' },
-    { name: 'Товар 4', description: 'Краткое описание', price: '1500 ₽' },
-    { name: 'Товар 5', description: 'Краткое описание', price: '2500 ₽' },
-    { name: 'Товар 6', description: 'Краткое описание', price: '450 ₽' },
-    { name: 'Товар 7', description: 'Краткое описание', price: '3000 ₽' },
-    { name: 'Товар 8', description: 'Краткое описание', price: '999 ₽' },
-    { name: 'Товар 9', description: 'Краткое описание', price: '2000 ₽' },
-    { name: 'Товар 10', description: 'Краткое описание', price: '1300 ₽' },
-  ]
+    { name: "Товар 1", description: "Краткое описание", price: "999 ₽" },
+    { name: "Товар 2", description: "Краткое описание", price: "1200 ₽" },
+    { name: "Товар 3", description: "Краткое описание", price: "800 ₽" },
+    { name: "Товар 4", description: "Краткое описание", price: "1500 ₽" },
+    { name: "Товар 5", description: "Краткое описание", price: "2500 ₽" },
+    { name: "Товар 6", description: "Краткое описание", price: "450 ₽" },
+    { name: "Товар 7", description: "Краткое описание", price: "3000 ₽" },
+    { name: "Товар 8", description: "Краткое описание", price: "999 ₽" },
+    { name: "Товар 9", description: "Краткое описание", price: "2000 ₽" },
+    { name: "Товар 10", description: "Краткое описание", price: "1300 ₽" },
+  ];
 
-  const [searchTerm, setSearchTerm] = useState('')
-  const [openCalendar, setOpenCalendar] = useState(null)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [openCalendar, setOpenCalendar] = useState(null);
 
   const filteredProducts = products.filter(
     (product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.description.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  );
 
   const handleRentButtonClick = (index) => {
-    setOpenCalendar(openCalendar === index ? null : index)
-  }
+    setOpenCalendar(openCalendar === index ? null : index);
+  };
 
   const handleCloseCalendar = () => {
-    setOpenCalendar(null)
-  }
+    setOpenCalendar(null);
+  };
 
   return (
     <div className={styles.main}>
@@ -61,8 +62,8 @@ function Main() {
               <SearchIcon />
             </button>
             <input
-              type='text'
-              placeholder='Поиск по каталогу'
+              type="text"
+              placeholder="Поиск по каталогу"
               className={styles.search}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -80,7 +81,7 @@ function Main() {
           filteredProducts.map((product, index) => (
             <div className={styles.productContainer} key={index}>
               <div className={styles.productImg}>
-                <img src='./images/voidImg.png' alt='пустой товар' />
+                <img src="./images/voidImg.png" alt="пустой товар" />
               </div>
               <div className={styles.productInfo}>
                 <div className={styles.productName}>
@@ -91,15 +92,15 @@ function Main() {
                   <span className={styles.productPrice}>{product.price}</span>
                   <Button
                     className={styles.rentButton}
-                    variant='outlined'
+                    variant="outlined"
                     sx={{
-                      borderRadius: '12px',
-                      borderColor: '#006FFD',
-                      color: '#006FFD',
-                      padding: '8px 16px',
-                      '&:hover': {
-                        backgroundColor: '#006FFD',
-                        color: 'white',
+                      borderRadius: "12px",
+                      borderColor: "#006FFD",
+                      color: "#006FFD",
+                      padding: "8px 16px",
+                      "&:hover": {
+                        backgroundColor: "#006FFD",
+                        color: "white",
                       },
                     }}
                     onClick={() => handleRentButtonClick(index)}
@@ -114,6 +115,7 @@ function Main() {
           <p>Товары не найдены</p>
         )}
       </div>
+      <ItemList tg_id={0} />
 
       {/* Модальное окно */}
 
@@ -136,18 +138,18 @@ function Main() {
           </div>
           <div className={styles.modalActions}>
             <Button
-              variant='outlined'
+              variant="outlined"
               sx={{
-                borderRadius: '12px',
-                borderColor: '#006FFD',
-                color: '#006FFD',
-                padding: '8px 50px',
-                '&:hover': {
-                  backgroundColor: '#006FFD',
-                  color: 'white',
+                borderRadius: "12px",
+                borderColor: "#006FFD",
+                color: "#006FFD",
+                padding: "8px 50px",
+                "&:hover": {
+                  backgroundColor: "#006FFD",
+                  color: "white",
                 },
               }}
-              className='sendRequestButton'
+              className="sendRequestButton"
             >
               Отправить запрос арендодателю
             </Button>
@@ -181,7 +183,7 @@ function Main() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Main
+export default Main;
