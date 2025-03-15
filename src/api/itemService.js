@@ -1,5 +1,3 @@
-const api = process.env.REACT_APP_API_BASE_URL;
-
 /**
  * Получает список товаров для пользователя, исключая его собственные.
  * @param {number} tg_id - ID пользователя.
@@ -10,7 +8,8 @@ const api = process.env.REACT_APP_API_BASE_URL;
  */
 const getItems = async (tg_id = 0, lastItemId = 0, limit = 10) => {
   try {
-    const url = new URL(`${api}getOfferList`);
+    const url = new URL(`${process.env.REACT_APP_API_BASE_URL}getOfferList`);
+    console.log("getItems");
     // Добавляем параметры запроса
     url.searchParams.append("tg_id", tg_id.toString());
     url.searchParams.append("lastItemId", lastItemId.toString());
@@ -25,8 +24,8 @@ const getItems = async (tg_id = 0, lastItemId = 0, limit = 10) => {
     }
 
     const data = await response.json();
-    console.log("itemService:");
-    console.log(data);
+    //console.log("itemService:");
+    //console.log(data);
     return data;
   } catch (error) {
     console.error("Ошибка при получении товаров:", error);

@@ -8,8 +8,9 @@ const ItemList = ({ tg_id, initialLimit = 2 }) => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true); // Есть ли еще элементы для загрузки
   const [lastItemId, setLastItemId] = useState(0);
-
   const [filteredProducts, setFilteredProducts] = useState([]);
+
+  //Первая загрузка
 
   useEffect(() => {
     setFilteredProducts(items);
@@ -25,6 +26,7 @@ const ItemList = ({ tg_id, initialLimit = 2 }) => {
         setLoading(false);
         return;
       }
+      if (data.length < initialLimit) setHasMore(false);
       // Получаем ID последнего элемента для пагинации
       setLastItemId(data[data.length - 1].id);
       setItems((prev) => [
@@ -38,13 +40,16 @@ const ItemList = ({ tg_id, initialLimit = 2 }) => {
     }
   }, [tg_id, lastItemId, initialLimit]);
 
-  //Эффект при монтировании компонента и изменении tg_id
+  const reloadItems = useCallback(async () => {
+    setLastItemId(0); // Сбрасываем lastItemId
+    setItems([]); // Опустошаем
+    setHasMore(true);
+    loadItems();
+  }, []);
+
   useEffect(() => {
-    // Предотвращаем многократную загрузку
-    if (loading || !hasMore) return;
-    setLastItemId(null); // Сбрасываем lastItemId
-    loadItems(); // Загружаем первую партию товаров
-  }, [tg_id]);
+    reloadItems(); // Загружаем первую партию товаров
+  }, [reloadItems]);
 
   const handleRentButtonClick = (index) => {
     console.log("Вы нажали арендовать:", index);
@@ -107,7 +112,14 @@ const ItemList = ({ tg_id, initialLimit = 2 }) => {
           {loading ? "Загрузка..." : "Загрузить еще"}
         </Button>
       ) : (
-        <div>На этом всё!</div>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={reloadItems}
+          disabled={loading}
+        >
+          Обновить
+        </Button>
       )}
     </div>
   );
