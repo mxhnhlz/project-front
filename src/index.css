@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
+body {
+  margin: 0;
+
+  overflow-x: hidden;
+  width: 100dvw;
+}
 .react-calendar__navigation__label {
   font-family: 'Inter', serif;
 
@@ -70,15 +76,4 @@ abbr[title] {
 }
 .react-calendar__tile abbr {
   color: black;
-}
-
-.react-calendar__tile:hover {
-}
-
-.react-calendar__tile--active {
-}
-
-.react-calendar__tile abbr:active {
-}
-.react-calendar__tile abbr:hover {
 }

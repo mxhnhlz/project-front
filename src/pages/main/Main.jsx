@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import { Button } from "@mui/material";
 
@@ -30,6 +31,56 @@ function Main() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [openCalendar, setOpenCalendar] = useState(null);
+=======
+import React, { useState } from 'react'
+import { Button } from '@mui/material'
+import MyCalendar from './calendar/calendar'
+import { useNavigate } from 'react-router-dom'
+import styles from './main.module.css'
+
+import SearchIcon from '../components/icons/SearchIcon'
+import CartButton from '../components/icons/cartButton'
+
+import Menu from '../components/menu/Menu'
+// import Header from '../components/header/header'
+
+function Main() {
+  const products = [
+    { name: 'Товар 1', description: 'Краткое описание', price: '999 ₽' },
+    {
+      name: 'Товар 2',
+      description:
+        'Очень длинное описание товара, которое содержит много деталей и информации, но должно отображаться ограниченно, чтобы не занимать слишком много места.',
+      price: '1200 ₽',
+    },
+    {
+      name: 'Товар 3',
+      description:
+        'Описание средней длины, которое немного больше стандартного, но не слишком длинное.',
+      price: '800 ₽',
+    },
+    { name: 'Товар 4', description: 'Краткое описание', price: '1500 ₽' },
+    {
+      name: 'Товар 5',
+      description:
+        'Очень длинное описание товара, которое рассказывает обо всех его характеристиках, преимуществах и способах использования. Такой текст может быть полезен для покупателя, но без ограничения он может занимать слишком много пространства.',
+      price: '2500 ₽',
+    },
+    { name: 'Товар 6', description: 'Краткое описание', price: '450 ₽' },
+    { name: 'Товар 7', description: 'Краткое описание', price: '3000 ₽' },
+    { name: 'Товар 8', description: 'Краткое описание', price: '999 ₽' },
+    { name: 'Товар 9', description: 'Краткое описание', price: '2000 ₽' },
+    { name: 'Товар 10', description: 'Краткое описание', price: '1300 ₽' },
+    { name: 'Товар 11', description: 'Краткое описание', price: '1100 ₽' },
+    { name: 'Товар 12', description: 'Краткое описание', price: '1300 ₽' },
+    { name: 'Товар 13', description: 'Краткое описание', price: '1400 ₽' },
+  ]
+
+  const [searchTerm, setSearchTerm] = useState('')
+  const [openCalendar, setOpenCalendar] = useState(null)
+  const [visibleCount, setVisibleCount] = useState(10) // Количество отображаемых товаров
+  const navigate = useNavigate()
+>>>>>>> 76661a910adb747aaee4e3e823e80422887f2e83
 
   const filteredProducts = products.filter(
     (product) =>
@@ -45,16 +96,19 @@ function Main() {
     setOpenCalendar(null);
   };
 
+  const handleProductClick = (product) => {
+    navigate(`/product/${product.name}`, { state: { product } })
+  }
+
+  const loadMoreProducts = () => {
+    setVisibleCount(visibleCount + 5) // Увеличиваем количество отображаемых товаров
+  }
+
   return (
     <div className={styles.main}>
       <div className={styles.searchCartWrapper}>
         {/* header */}
-        <div>
-          <header className={styles.header}>
-            <h1>Название бота</h1>
-          </header>
-        </div>
-
+        {/* <Header /> */}
         {/* search */}
         <div className={styles.searchContainer}>
           <div className={styles.searchWrapper}>
@@ -77,6 +131,7 @@ function Main() {
 
       {/* Товары */}
       <div className={styles.products}>
+<<<<<<< HEAD
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product, index) => (
             <div className={styles.productContainer} key={index}>
@@ -108,21 +163,73 @@ function Main() {
                     Арендовать
                   </Button>
                 </div>
+=======
+        {filteredProducts.slice(0, visibleCount).map((product, index) => (
+          <div className={styles.productContainer} key={index}>
+            <div
+              className={styles.productImg}
+              onClick={() => handleProductClick(product)}
+            >
+              <img src='./images/voidImg.png' alt='пустой товар' />
+            </div>
+            <div className={styles.productInfo}>
+              <div className={styles.productName}>
+                <h1>{product.name}</h1>
+                <p className={styles.productDescription}>
+                  {product.description}
+                </p>
+              </div>
+              <div className={styles.productStats}>
+                <span className={styles.productPrice}>{product.price}</span>
+                <Button
+                  className={styles.rentButton}
+                  variant='outlined'
+                  sx={{
+                    borderRadius: '12px',
+                    borderColor: '#006FFD',
+                    color: '#006FFD',
+                    padding: '8px 16px',
+                    '&:hover': {
+                      backgroundColor: '#006FFD',
+                      color: 'white',
+                    },
+                  }}
+                  onClick={() => handleRentButtonClick(index)}
+                >
+                  Арендовать
+                </Button>
+>>>>>>> 76661a910adb747aaee4e3e823e80422887f2e83
               </div>
             </div>
-          ))
-        ) : (
-          <p>Товары не найдены</p>
+          </div>
+        ))}
+
+        {/* Кнопка "Загрузить ещё" */}
+        {filteredProducts.length > visibleCount && (
+          <Button
+            variant='outlined'
+            sx={{
+              borderRadius: '12px',
+              borderColor: '#006FFD',
+              color: '#006FFD',
+              padding: '8px 16px',
+              '&:hover': {
+                backgroundColor: '#006FFD',
+                color: 'white',
+              },
+            }}
+            onClick={loadMoreProducts}
+          >
+            Загрузить ещё
+          </Button>
         )}
       </div>
 
       <ItemList tg_id={0} />
 
       {/* Модальное окно */}
-
       {openCalendar !== null && (
         <div className={styles.modalContainer}>
-          {/* Кнопка "Отменить" */}
           <div className={styles.cancelButtonContainer}>
             <button
               className={styles.cancelButton}
@@ -159,30 +266,7 @@ function Main() {
       )}
 
       {/* footer */}
-      <div className={styles.footer}>
-        <div className={styles.items2}>
-          <button className={styles.buttonFooter}>
-            <MainMenu />
-            <span className={styles.footerSpan}>Главная</span>
-          </button>
-          <button className={styles.buttonFooter}>
-            <FavButton />
-            <span className={styles.footerSpan}>Избранное</span>
-          </button>
-          <button className={styles.buttonFooter}>
-            <CreateButton />
-            <span className={styles.footerSpan}>Создать</span>
-          </button>
-          <button className={styles.buttonFooter}>
-            <MessagesButton />
-            <span className={styles.footerSpan}>Сообщения</span>
-          </button>
-          <button className={styles.buttonFooter}>
-            <ProfileButton />
-            <span className={styles.footerSpan}>Профиль</span>
-          </button>
-        </div>
-      </div>
+      <Menu />
     </div>
   );
 }
