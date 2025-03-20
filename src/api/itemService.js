@@ -9,7 +9,6 @@
 const getItems = async (tg_id = 0, lastItemId = 0, limit = 10) => {
   try {
     const url = new URL(`${process.env.REACT_APP_API_BASE_URL}getOfferList`);
-    console.log("getItems");
     // Добавляем параметры запроса
     url.searchParams.append("tg_id", tg_id.toString());
     url.searchParams.append("lastItemId", lastItemId.toString());

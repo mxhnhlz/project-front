@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@mui/material";
 import MyCalendar from "./calendar/calendar";
 import { useNavigate } from "react-router-dom";
@@ -6,53 +6,52 @@ import styles from "./main.module.css";
 
 import SearchIcon from "../components/icons/SearchIcon";
 import CartButton from "../components/icons/cartButton";
-import ItemList from "./itemList/itemList";
-
 import Menu from "../components/menu/Menu";
-// import Header from '../components/header/header'
+import getItems from "../../api/itemService"; // Импортируем функцию для загрузки данных
 
 function Main() {
-  const products = [
-    { name: "Товар 1", description: "Краткое описание", price: "999 ₽" },
-    {
-      name: "Товар 2",
-      description:
-        "Очень длинное описание товара, которое содержит много деталей и информации, но должно отображаться ограниченно, чтобы не занимать слишком много места.",
-      price: "1200 ₽",
-    },
-    {
-      name: "Товар 3",
-      description:
-        "Описание средней длины, которое немного больше стандартного, но не слишком длинное.",
-      price: "800 ₽",
-    },
-    { name: "Товар 4", description: "Краткое описание", price: "1500 ₽" },
-    {
-      name: "Товар 5",
-      description:
-        "Очень длинное описание товара, которое рассказывает обо всех его характеристиках, преимуществах и способах использования. Такой текст может быть полезен для покупателя, но без ограничения он может занимать слишком много пространства.",
-      price: "2500 ₽",
-    },
-    { name: "Товар 6", description: "Краткое описание", price: "450 ₽" },
-    { name: "Товар 7", description: "Краткое описание", price: "3000 ₽" },
-    { name: "Товар 8", description: "Краткое описание", price: "999 ₽" },
-    { name: "Товар 9", description: "Краткое описание", price: "2000 ₽" },
-    { name: "Товар 10", description: "Краткое описание", price: "1300 ₽" },
-    { name: "Товар 11", description: "Краткое описание", price: "1100 ₽" },
-    { name: "Товар 12", description: "Краткое описание", price: "1300 ₽" },
-    { name: "Товар 13", description: "Краткое описание", price: "1400 ₽" },
-  ];
-
-  const [searchTerm, setSearchTerm] = useState("");
   const [openCalendar, setOpenCalendar] = useState(null);
-  const [visibleCount, setVisibleCount] = useState(10); // Количество отображаемых товаров
+  const [items, setItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]); //TODO: продумать фильтрацию
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true); // Есть ли еще элементы для загрузки
+  const [lastItemId, setLastItemId] = useState(0);
   const navigate = useNavigate();
+  const sizeOfIncome = 3;
+  // Функция для загрузки данных
+  const loadItems = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getItems(0, lastItemId, sizeOfIncome); // Используем tg_id = 0 для примера
+      if (data.length === 0) {
+        setHasMore(false);
+        setLoading(false);
+        return;
+      }
+      if (data.length < sizeOfIncome) setHasMore(false);
+      // Получаем ID последнего элемента для пагинации
+      setLastItemId(data[data.length - 1].id);
+      setItems((prev) => [
+        ...new Map([...prev, ...data].map((item) => [item.id, item])).values(),
+      ]);
+    } catch (error) {
+      console.error("Ошибка при загрузке элементов:", error);
+      setHasMore(false); // Отключаем загрузку при ошибке
+    } finally {
+      setLoading(false);
+    }
+  }, [lastItemId]);
 
-  const filteredProducts = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const reloadItems = useCallback(async () => {
+    setLastItemId(0); // Сбрасываем lastItemId
+    setItems([]); // Опустошаем
+    setHasMore(true);
+    loadItems();
+  }, []);
+
+  useEffect(() => {
+    reloadItems(); // Загружаем первую партию товаров
+  }, [reloadItems]);
 
   const handleRentButtonClick = (index) => {
     setOpenCalendar(openCalendar === index ? null : index);
@@ -63,18 +62,17 @@ function Main() {
   };
 
   const handleProductClick = (product) => {
-    navigate(`/product/${product.name}`, { state: { product } });
+    navigate(`/product/${product.title}`, { state: { product } });
   };
 
-  const loadMoreProducts = () => {
-    setVisibleCount(visibleCount + 5); // Увеличиваем количество отображаемых товаров
+  const loadMore = () => {
+    setLoading(false);
+    loadItems();
   };
 
   return (
     <div className={styles.main}>
       <div className={styles.searchCartWrapper}>
-        {/* header */}
-        {/* <Header /> */}
         {/* search */}
         <div className={styles.searchContainer}>
           <div className={styles.searchWrapper}>
@@ -85,8 +83,6 @@ function Main() {
               type="text"
               placeholder="Поиск по каталогу"
               className={styles.search}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <button className={styles.cartButton}>
@@ -97,23 +93,24 @@ function Main() {
 
       {/* Товары */}
       <div className={styles.products}>
-        {filteredProducts.slice(0, visibleCount).map((product, index) => (
+        {items.map((product, index) => (
           <div className={styles.productContainer} key={index}>
             <div
               className={styles.productImg}
               onClick={() => handleProductClick(product)}
             >
-              <img src="./images/voidImg.png" alt="пустой товар" />
+              <img
+                src={process.env.REACT_APP_API_IMAGE_URL + product.images[0]}
+                alt="пустой товар"
+              />
             </div>
             <div className={styles.productInfo}>
               <div className={styles.productName}>
-                <h1>{product.name}</h1>
-                <p className={styles.productDescription}>
-                  {product.description}
-                </p>
+                <h1>{product.title}</h1>
+                <p className={styles.productDescription}>{product.info}</p>
               </div>
               <div className={styles.productStats}>
-                <span className={styles.productPrice}>{product.price}</span>
+                <span className={styles.productPrice}>{product.price} ₽</span>
                 <Button
                   className={styles.rentButton}
                   variant="outlined"
@@ -136,8 +133,8 @@ function Main() {
           </div>
         ))}
 
-        {/* Кнопка "Загрузить ещё" */}
-        {filteredProducts.length > visibleCount && (
+        {/* Кнопка "Загрузить еще" для пагинации */}
+        {hasMore ? (
           <Button
             variant="outlined"
             sx={{
@@ -150,14 +147,31 @@ function Main() {
                 color: "white",
               },
             }}
-            onClick={loadMoreProducts}
+            onClick={loadMore}
+            disabled={loading}
           >
-            Загрузить ещё
+            {loading ? "Загрузка..." : "Загрузить еще"}
+          </Button>
+        ) : (
+          <Button
+            variant="outlined"
+            sx={{
+              borderRadius: "12px",
+              borderColor: "#006FFD",
+              color: "#006FFD",
+              padding: "8px 16px",
+              "&:hover": {
+                backgroundColor: "#006FFD",
+                color: "white",
+              },
+            }}
+            onClick={reloadItems}
+            disabled={loading}
+          >
+            Обновить
           </Button>
         )}
       </div>
-
-      <ItemList tg_id={0} />
 
       {/* Модальное окно */}
       {openCalendar !== null && (
