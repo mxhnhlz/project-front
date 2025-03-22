@@ -1,28 +1,29 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@mui/material";
 import MyCalendar from "./calendar/calendar";
-import { useNavigate } from "react-router-dom";
 import styles from "./main.module.css";
-
+import { useParams, useNavigate } from "react-router-dom";
 import SearchIcon from "../components/icons/SearchIcon";
 import CartButton from "../components/icons/cartButton";
 import Menu from "../components/menu/Menu";
-import getItems from "../../api/itemService"; // Импортируем функцию для загрузки данных
+import db from "../../api/db"; // Импортируем функцию для загрузки данных
 
 function Main() {
+  const navigate = useNavigate();
+  const { tg_id } = useParams();
+  const userId = tg_id || 0;
   const [openCalendar, setOpenCalendar] = useState(null);
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]); //TODO: продумать фильтрацию
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true); // Есть ли еще элементы для загрузки
   const [lastItemId, setLastItemId] = useState(0);
-  const navigate = useNavigate();
   const sizeOfIncome = 3;
   // Функция для загрузки данных
   const loadItems = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getItems(0, lastItemId, sizeOfIncome); // Используем tg_id = 0 для примера
+      const data = await db.getItems(userId, lastItemId, sizeOfIncome);
       if (data.length === 0) {
         setHasMore(false);
         setLoading(false);
@@ -62,7 +63,7 @@ function Main() {
   };
 
   const handleProductClick = (product) => {
-    navigate(`/product/${product.title}`, { state: { product } });
+    navigate(`/product/${userId}/${product.id}`, { state: { product } });
   };
 
   const loadMore = () => {
@@ -212,7 +213,7 @@ function Main() {
       )}
 
       {/* footer */}
-      <Menu />
+      <Menu tg_id={userId} />
     </div>
   );
 }
