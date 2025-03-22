@@ -25,10 +25,9 @@ class db {
 
   async getUser(tg_id) {
     try {
-      const url = new URL(
+      const response = await fetch(
         `${process.env.REACT_APP_API_BASE_URL}getUser/${tg_id}`
       );
-      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(
           `Ошибка при запросе: ${response.status} ${response.statusText}`
@@ -44,13 +43,13 @@ class db {
 
   async getOffer(id) {
     try {
-      const response = await fetch(api + "/getOffer/" + id);
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}getOffer/${id}`
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("getOffer:");
-      console.log(data);
       return data;
     } catch (error) {
       console.error("Error in getOffer:", error);
