@@ -6,9 +6,7 @@ class db {
       url.searchParams.append("tg_id", tg_id.toString());
       url.searchParams.append("lastItemId", lastItemId.toString());
       url.searchParams.append("limit", limit.toString());
-
       const response = await fetch(url);
-
       if (!response.ok) {
         throw new Error(
           `Ошибка при запросе: ${response.status} ${response.statusText}`

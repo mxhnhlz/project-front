@@ -19,7 +19,6 @@ function Profile() {
 
       try {
         const userData = await db.getUser(userId); // Вызываем функцию getUser с tg_id
-        console.log(userData);
         setUser(userData); // Обновляем состояние с данными пользователя
       } catch (error) {
         console.error("Ошибка при получении данных пользователя:", error);

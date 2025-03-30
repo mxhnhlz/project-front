@@ -8,7 +8,7 @@ function ProductPage() {
   const loadOffer = useCallback(async () => {
     try {
       const data = await db.getOffer(id);
-      setOffer(await JSON.stringify(data));
+      setOffer(data);
     } catch (error) {
       console.log("Error in roductPage, loadOffer ", error);
     }
@@ -16,7 +16,7 @@ function ProductPage() {
   useEffect(() => {
     loadOffer();
   });
-  return <div>P{offer ? `${offer}` : ""}</div>;
+  return <div>P{offer ? `${JSON.stringify(offer)}` : ""}</div>;
 }
 
 export default ProductPage;
