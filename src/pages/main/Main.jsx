@@ -18,7 +18,7 @@ function Main() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true); // Есть ли еще элементы для загрузки
   const [lastItemId, setLastItemId] = useState(0);
-  const sizeOfIncome = 3;
+  const sizeOfIncome = 50;
   // Функция для загрузки данных
   const loadItems = useCallback(async () => {
     setLoading(true);
@@ -190,24 +190,6 @@ function Main() {
               openCalendar={openCalendar}
               handleCloseCalendar={handleCloseCalendar}
             />
-          </div>
-          <div className={styles.modalActions}>
-            <Button
-              variant="outlined"
-              sx={{
-                borderRadius: "12px",
-                borderColor: "#006FFD",
-                color: "#006FFD",
-                padding: "8px 50px",
-                "&:hover": {
-                  backgroundColor: "#006FFD",
-                  color: "white",
-                },
-              }}
-              className="sendRequestButton"
-            >
-              Отправить запрос арендодателю
-            </Button>
           </div>
         </div>
       )}

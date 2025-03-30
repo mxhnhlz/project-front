@@ -1,0 +1,55 @@
+.cal {
+  background: white;
+  border: 0px solid #a0a096;
+  font-family: "Inter", serif;
+  line-height: 1.125em;
+}
+
+.selectedDates {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+
+.selectedDates p {
+  cursor: pointer;
+  padding: 5px;
+  border: 1px solid transparent;
+}
+
+.selectedDates p:hover {
+  border-color: #ccc;
+}
+
+.selectedDates .active {
+  font-weight: bold;
+  color: #006ffd;
+}
+
+.selectedRange {
+  background-color: #b0dcf7 !important;
+  color: black;
+}
+
+.singleDate {
+  background-color: #006ffd !important;
+  color: white !important;
+  border-radius: 50% !important;
+}
+
+.startDateStyle {
+  background-color: #006ffd !important;
+  color: white !important;
+  border-radius: 50% 0 0 50% !important; /* Левый полукруг */
+}
+
+.endDateStyle {
+  background-color: #006ffd !important;
+  color: white !important;
+  border-radius: 0 50% 50% 0 !important; /* Правый полукруг */
+}
+
+.modalActions {
+  display: flex;
+  justify-content: center;
+}
