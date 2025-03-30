@@ -53,3 +53,39 @@
   display: flex;
   justify-content: center;
 }
+
+.bookedDay {
+  background-color: #ffa500 !important; /* Оранжевый цвет для заблокированных дней */
+  color: white !important;
+  cursor: not-allowed;
+  min-height: 24px;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-5px);
+  }
+  40%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+.error {
+  color: #ff0000;
+  margin-top: 8px;
+  height: 24px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.error.show {
+  opacity: 1;
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}

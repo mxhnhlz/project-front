@@ -1,19 +1,37 @@
-import React, { useState } from "react";
+import { React, useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import styles from "./calendar.module.css";
 import Button from "@mui/material/Button";
+import db from "../../../api/db";
 
-const MyCalendar = () => {
+const MyCalendar = ({ offerId, userId }) => {
   const today = new Date();
-
+  console.log(offerId, userId);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selecting, setSelecting] = useState("start");
+  const [bookedDays, setBookedDays] = useState([]);
+  const [isDateBlocked, setIsDateBlocked] = useState(true);
+
+  useEffect(() => {
+    const fetchBookedDays = async () => {
+      try {
+        const bookedDaysData = await db.getOfferDays(offerId);
+        setBookedDays(bookedDaysData);
+      } catch (error) {
+        console.error("Failed to fetch booked days:", error);
+      }
+    };
+    fetchBookedDays();
+  }, [offerId]);
 
   const onChange = (date) => {
     if (selecting === "start") {
-      if (endDate < date || endDate === null) setEndDate(date);
+      if (endDate < date || endDate === null) {
+        setSelecting("end");
+        setEndDate(date);
+      }
       setStartDate(date);
     } else {
       if (startDate > date || startDate === null) setStartDate(date);
@@ -21,8 +39,28 @@ const MyCalendar = () => {
     }
   };
 
+  useEffect(() => {
+    const isOverlap = bookedDays.some((bookedDay) => {
+      const bookedStart = new Date(bookedDay.start);
+      const bookedEnd = new Date(bookedDay.end);
+      // Проверка на пересечение диапазонов (пиздец костыль, но работает)
+      return startDate <= bookedEnd && endDate >= bookedStart;
+    });
+
+    setIsDateBlocked(isOverlap);
+  }, [startDate, endDate]);
+
   const tileClassName = ({ date, view }) => {
     if (view === "month") {
+      if (
+        bookedDays.some((bookedDay) => {
+          const bookedStart = new Date(bookedDay.start);
+          const bookedEnd = new Date(bookedDay.end);
+          return date >= bookedStart && date <= bookedEnd;
+        })
+      ) {
+        return styles.bookedDay;
+      }
       if (startDate && endDate) {
         if (
           startDate.getTime() === endDate.getTime() &&
@@ -44,7 +82,18 @@ const MyCalendar = () => {
     }
   };
 
-  const isRentAvailable = startDate !== null && endDate !== null;
+  const handleSendRequest = async () => {
+    try {
+      const data = await db.createRent(offerId, userId, startDate, endDate);
+      alert("Запрос успешно отправлен!"); // Replace with a better notification
+    } catch (error) {
+      console.error("Error creating rent:", error);
+      alert("Не удалось отправить запрос. Попробуйте позже."); // Replace with a better error message
+    }
+  };
+
+  const maxDate = new Date();
+  maxDate.setMonth(maxDate.getMonth() + 6);
 
   return (
     <div>
@@ -58,6 +107,7 @@ const MyCalendar = () => {
         next2Label={null}
         className={styles.cal}
         minDate={today}
+        maxDate={maxDate}
         navigationLabel={({ date, locale }) => {
           const monthYear = new Intl.DateTimeFormat(locale, {
             month: "short",
@@ -87,7 +137,7 @@ const MyCalendar = () => {
       <div className={styles.modalActions}>
         <Button
           variant="outlined"
-          disabled={!isRentAvailable}
+          disabled={isDateBlocked}
           sx={{
             borderRadius: "12px",
             borderColor: "#006FFD",
@@ -103,9 +153,13 @@ const MyCalendar = () => {
             },
           }}
           className="sendRequestButton"
+          onClick={handleSendRequest}
         >
           Отправить запрос арендодателю
         </Button>
+      </div>
+      <div className={`${styles.error} ${isDateBlocked ? styles.show : ""}`}>
+        Выбранные даты недоступны для аренды.
       </div>
     </div>
   );

@@ -189,6 +189,8 @@ function Main() {
             <MyCalendar
               openCalendar={openCalendar}
               handleCloseCalendar={handleCloseCalendar}
+              userId={userId}
+              offerId={items[openCalendar].id}
             />
           </div>
         </div>

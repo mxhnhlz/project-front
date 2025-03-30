@@ -54,6 +54,60 @@ class db {
       throw error;
     }
   }
+
+  async getOfferDays(id) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}getOfferDays/${id}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in getOfferDays:", error);
+      throw error;
+    }
+  }
+
+  async createRent(
+    offer_id,
+    user_id,
+    start,
+    end,
+    title = "", //возможно полезное
+    info = "",
+    price = 0
+  ) {
+    try {
+      const url = `${process.env.REACT_APP_API_BASE_URL}rent`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Говорим серверу, что отправляем JSON
+        },
+        body: JSON.stringify({
+          // Преобразуем данные в JSON
+          offer_id: offer_id,
+          user_id: user_id,
+          start: start,
+          end: end,
+          title: title,
+          info: info,
+          price: price,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in createRent:", error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new db();

@@ -88,6 +88,7 @@ function Profile() {
             <div style={{ marginBottom: "20px" }}>
               <img
                 src={`${process.env.REACT_APP_API_IMAGE_URL}${user.image}`}
+                alt={Avatar}
               ></img>
             </div>
             <p
