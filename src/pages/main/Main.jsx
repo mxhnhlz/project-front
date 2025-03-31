@@ -190,7 +190,7 @@ function Main() {
               openCalendar={openCalendar}
               handleCloseCalendar={handleCloseCalendar}
               userId={userId}
-              offerId={items[openCalendar].id}
+              offer={items[openCalendar]}
             />
           </div>
         </div>

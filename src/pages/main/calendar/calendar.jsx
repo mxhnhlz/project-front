@@ -5,9 +5,8 @@ import styles from "./calendar.module.css";
 import Button from "@mui/material/Button";
 import db from "../../../api/db";
 
-const MyCalendar = ({ offerId, userId }) => {
+const MyCalendar = ({ offer, userId }) => {
   const today = new Date();
-  console.log(offerId, userId);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selecting, setSelecting] = useState("start");
@@ -17,14 +16,14 @@ const MyCalendar = ({ offerId, userId }) => {
   useEffect(() => {
     const fetchBookedDays = async () => {
       try {
-        const bookedDaysData = await db.getOfferDays(offerId);
+        const bookedDaysData = await db.getOfferDays(offer.id);
         setBookedDays(bookedDaysData);
       } catch (error) {
         console.error("Failed to fetch booked days:", error);
       }
     };
     fetchBookedDays();
-  }, [offerId]);
+  }, [offer.id]);
 
   const onChange = (date) => {
     if (selecting === "start") {
@@ -84,7 +83,7 @@ const MyCalendar = ({ offerId, userId }) => {
 
   const handleSendRequest = async () => {
     try {
-      const data = await db.createRent(offerId, userId, startDate, endDate);
+      const data = await db.createRent(offer.id, userId, startDate, endDate);
       alert("Запрос успешно отправлен!"); // Replace with a better notification
       try {
         await db.sendMessage(
