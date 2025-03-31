@@ -108,6 +108,31 @@ class db {
       throw error;
     }
   }
+
+  async sendMessage(tg_id, text) {
+    try {
+      const url = `${process.env.REACT_APP_API_BASE_URL}tgMessage`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Говорим серверу, что отправляем JSON
+        },
+        body: JSON.stringify({
+          // Преобразуем данные в JSON
+          tg_id: tg_id,
+          text: text,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in createRent:", error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new db();

@@ -86,6 +86,14 @@ const MyCalendar = ({ offerId, userId }) => {
     try {
       const data = await db.createRent(offerId, userId, startDate, endDate);
       alert("Запрос успешно отправлен!"); // Replace with a better notification
+      try {
+        await db.sendMessage(
+          offer.tg_id,
+          `На объявление ${offer.name} появилось предложение, проверьте входящие аренды.`
+        ); //TODO better message
+      } catch (error) {
+        console.error("Error in sendMessage in calendar's handleSendRequest");
+      }
     } catch (error) {
       console.error("Error creating rent:", error);
       alert("Не удалось отправить запрос. Попробуйте позже."); // Replace with a better error message
