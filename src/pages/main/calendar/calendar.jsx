@@ -11,7 +11,7 @@ const MyCalendar = ({ offer, userId }) => {
   const [endDate, setEndDate] = useState(null);
   const [selecting, setSelecting] = useState("start");
   const [bookedDays, setBookedDays] = useState([]);
-  const [isDateBlocked, setIsDateBlocked] = useState(true);
+  const [isDateBlocked, setIsDateBlocked] = useState(false);
 
   useEffect(() => {
     const fetchBookedDays = async () => {
@@ -47,7 +47,7 @@ const MyCalendar = ({ offer, userId }) => {
     });
 
     setIsDateBlocked(isOverlap);
-  }, [startDate, endDate]);
+  }, [startDate, endDate, bookedDays]);
 
   const tileClassName = ({ date, view }) => {
     if (view === "month") {
@@ -83,15 +83,23 @@ const MyCalendar = ({ offer, userId }) => {
 
   const handleSendRequest = async () => {
     try {
-      const data = await db.createRent(offer.id, userId, startDate, endDate);
+      await db.createRent(
+        offer.id,
+        userId,
+        startDate,
+        endDate,
+        offer.title,
+        offer.info,
+        offer.price
+      );
       alert("Запрос успешно отправлен!"); // Replace with a better notification
       try {
         await db.sendMessage(
           offer.tg_id,
-          `На объявление ${offer.name} появилось предложение, проверьте входящие аренды.`
+          `На объявление "${offer.title}" появилось предложение, проверьте входящие аренды.`
         ); //TODO better message
       } catch (error) {
-        console.error("Error in sendMessage in calendar's handleSendRequest");
+        console.error("Error in sendMessage:", error);
       }
     } catch (error) {
       console.error("Error creating rent:", error);
