@@ -5,7 +5,12 @@ import Menu from "../components/menu/Menu";
 function Create() {
   const { tg_id } = useParams();
   const userId = tg_id || 0;
-  return <div>Create</div>;
+  return (
+    <div>
+      Create
+      <Menu tg_id={tg_id}></Menu>
+    </div>
+  );
 }
 
 export default Create;

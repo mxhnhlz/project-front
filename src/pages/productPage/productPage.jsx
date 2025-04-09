@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import db from "../../api/db";
+import Menu from "../components/menu/Menu";
 
 function ProductPage() {
   const { tg_id, id } = useParams();
@@ -16,7 +17,12 @@ function ProductPage() {
   useEffect(() => {
     loadOffer();
   });
-  return <div>P{offer ? `${JSON.stringify(offer)}` : ""}</div>;
+  return (
+    <div>
+      P{offer ? `${JSON.stringify(offer)}` : ""}
+      <Menu tg_id={tg_id}></Menu>
+    </div>
+  );
 }
 
 export default ProductPage;
