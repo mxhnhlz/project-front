@@ -231,6 +231,64 @@ class db {
       throw error;
     }
   }
+
+  async deleteOffer(id) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}deleteOffer/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in deleteOffer:", error);
+      throw error;
+    }
+  }
+
+  async createOffer(tg_id, title, info, price) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}offer`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            // Создаем объект здесь
+            tg_id: tg_id,
+            title: title,
+            info: info,
+            price: price,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in createOffer:", error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new db();
