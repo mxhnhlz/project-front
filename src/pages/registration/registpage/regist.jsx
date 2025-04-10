@@ -12,16 +12,16 @@ function Regist() {
     navigate('/Profile')
   }
 
+  const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false) // Состояние для загрузки
+  const [loading, setLoading] = useState(false)
 
   const handlePasswordChange = (e) => {
     const value = e.target.value
     setPassword(value)
 
-    // Обновленное регулярное выражение, которое позволяет только латинские буквы и цифры
     if (!/^[a-zA-Z0-9]*$/.test(value)) {
       setError('Можно вводить только английские буквы и цифры')
     } else {
@@ -30,7 +30,7 @@ function Regist() {
   }
 
   const handleLogin = () => {
-    setLoading(true) // Показываем индикатор загрузки
+    setLoading(true)
 
     setTimeout(() => {
       if (password === 'correctPassword') {
@@ -44,9 +44,6 @@ function Regist() {
 
   return (
     <div className={styles.main}>
-      {/* header */}
-
-      {/* content */}
       <div className={styles.content}>
         <img src={image} className={styles.logo} alt='Logo' />
 
@@ -54,7 +51,13 @@ function Regist() {
           <div className={styles.welcomeContainer}>
             <p className={styles.welcomeText}>С возвращением!</p>
           </div>
-          <input type='text' placeholder='Логин' className={styles.input} />
+          <input
+            type='text'
+            placeholder='Логин'
+            className={styles.input}
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
+          />
 
           <div className={styles.passwordContainer}>
             <input
@@ -80,7 +83,7 @@ function Regist() {
             variant='contained'
             className={styles.loginButton}
             onClick={handleLogin}
-            disabled={!!error || loading}
+            disabled={!login || !password || !!error || loading}
           >
             {loading ? <CircularProgress size={24} color='inherit' /> : 'Войти'}
           </Button>
@@ -94,7 +97,6 @@ function Regist() {
         </div>
       </div>
 
-      {/* menu*/}
       <Menu />
     </div>
   )

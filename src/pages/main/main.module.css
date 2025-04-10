@@ -1,6 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 .main {
-  font-family: "Inter", serif;
+  font-family: 'Inter', serif;
   margin: 0;
   padding: 0;
   min-height: 100dvh;
@@ -199,30 +199,12 @@
 .cal {
   background: white;
   border: 0px solid #a0a096;
-  font-family: "Inter", serif;
+  font-family: 'Inter', serif;
   line-height: 1.125em;
 }
 
-.productImg {
-  transition: transform 0.3s ease;
-}
-
-.productImg:hover {
-  transform: scale(1.05);
-}
-
-.productContainer {
-  transition: transform 0.3s ease;
-}
-
-.productContainer:hover {
-  transform: translateY(-10px);
-}
-
-.productName h1 {
-  transition: color 0.3s ease;
-}
-
-.productContainer:hover .productName h1 {
-  color: #006ffd;
+@media (max-width: 600px) {
+  .search {
+    font-size: 12px; /* Уменьшаем размер шрифта на мобильных устройствах */
+  }
 }

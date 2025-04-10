@@ -1,0 +1,50 @@
+.main {
+  font-family: 'Inter', serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+p {
+  margin: 10px;
+  font-weight: bold;
+}
+
+/* header */
+
+.header {
+  text-align: center;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 30px;
+  margin-bottom: 25px;
+}
+
+.header h1 {
+  font-size: 14px;
+}
+
+.wrapHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(3px);
+}
+
+/* content */
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.rentButton {
+  margin-top: 15px;
+}
