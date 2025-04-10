@@ -133,6 +133,47 @@ class db {
       throw error;
     }
   }
+
+  async getFavorite(tg_id) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}getFavorite/${tg_id}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in getFavorite:", error);
+      throw error;
+    }
+  }
+
+  async newFavorite(tg_id, id) {
+    try {
+      const url = `${process.env.REACT_APP_API_BASE_URL}newFavorite`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Указываем, что отправляем JSON
+        },
+        body: JSON.stringify({ tg_id: tg_id, id: id }), // Преобразуем данные в JSON-строку
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text(); // Получаем текст ошибки от сервера
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+      const data = await response.json(); // Получаем JSON-ответ от сервера
+      return data; // Возвращаем полученные данные
+    } catch (error) {
+      console.error("Error in newFavorite:", error);
+      throw error; // Пробрасываем ошибку дальше, чтобы ее обработал вызывающий код
+    }
+  }
 }
 
 module.exports = new db();
