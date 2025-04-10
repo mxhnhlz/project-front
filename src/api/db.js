@@ -174,6 +174,47 @@ class db {
       throw error; // Пробрасываем ошибку дальше, чтобы ее обработал вызывающий код
     }
   }
+
+  async deleteFavorite(tg_id, id) {
+    try {
+      const url = `${process.env.REACT_APP_API_BASE_URL}deleteFavorite/${id}`;
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in deleteFavorite:", error);
+      throw error;
+    }
+  }
+
+  async getRelatedUsers(tg_id) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}getRelatedUsers/${tg_id}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in getRelatedUsers:", error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new db();
