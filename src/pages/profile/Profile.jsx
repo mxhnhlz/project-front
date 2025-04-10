@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react"; // Import useState and useEffect
+import React, { useState, useEffect } from "react";
 import styles from "./Profile.module.css";
-import { useParams } from "react-router-dom"; // Import useParams
+import { useParams } from "react-router-dom";
 import Avatar from "./avatar";
 import RightArrow from "./rightArrow";
 import Menu from "../components/menu/Menu";
@@ -9,131 +9,176 @@ import db from "../../api/db";
 function Profile() {
   const { tg_id } = useParams();
   const userId = tg_id || 0;
-  const [user, setUser] = useState(null); // Состояние для хранения данных пользователя
-  const [loading, setLoading] = useState(true); // Состояние для отображения индикатора загрузки
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [currentRentals, setCurrentRentals] = useState([]);
+  const [rentalHistory, setRentalHistory] = useState([]);
+  const [showCurrentRentalsPopup, setShowCurrentRentalsPopup] = useState(false);
+  const [showRentalHistoryPopup, setShowRentalHistoryPopup] = useState(false);
+  const [showAboutPopup, setShowAboutPopup] = useState(false);
 
   useEffect(() => {
-    // useEffect вызывается после рендеринга компонента
-    const fetchUser = async () => {
-      setLoading(true); // Начинаем загрузку, показываем индикатор
-
+    const fetchInitialData = async () => {
+      setLoading(true);
       try {
-        const userData = await db.getUser(userId); // Вызываем функцию getUser с tg_id
-        setUser(userData); // Обновляем состояние с данными пользователя
+        const userData = await db.getUser(userId);
+        setUser(userData);
+
+        const allRents = await db.getAllRents(userId);
+        setCurrentRentals(allRents.currentRents);
+        setRentalHistory(allRents.pastRents);
       } catch (error) {
-        console.error("Ошибка при получении данных пользователя:", error);
-        // Можно добавить обработку ошибок (например, отображение сообщения об ошибке)
+        console.error("Ошибка при получении данных:", error);
       } finally {
-        setLoading(false); // Загрузка завершена, скрываем индикатор
+        setLoading(false);
       }
     };
 
-    fetchUser(); // Вызываем функцию fetchUser при монтировании компонента
-  }, [userId]); // Зависимость: useEffect будет вызываться только при изменении tg_id
-
-  // Обработчики для кнопок (заглушки)
-  const handleCurrentRentalsClick = () => {
-    // Действия при нажатии на "Текущие аренды"
-    console.log("Переход к текущим арендам");
-    // navigate('/current-rentals'); // Пример перенаправления
-  };
-
-  const handleSwitchAccountClick = () => {
-    // Действия при нажатии на "Сменить аккаунт"
-    console.log("Переход к смене аккаунта");
-    // navigate('/switch-account'); // Пример перенаправления
-  };
+    fetchInitialData();
+  }, [userId]);
 
   const handleRentalHistoryClick = () => {
-    // Действия при нажатии на "История аренд"
-    console.log("Переход к истории аренд");
-    // navigate('/rental-history'); // Пример перенаправления
+    setShowRentalHistoryPopup(true);
+  };
+
+  const handleCurrentRentalsClick = () => {
+    setShowCurrentRentalsPopup(true);
   };
 
   const handleAboutAppClick = () => {
-    // Действия при нажатии на "О приложении"
-    console.log("Переход к информации о приложении");
-    // navigate('/about'); // Пример перенаправления
+    setShowAboutPopup(true);
   };
 
-  const handleDeleteAccountClick = () => {
-    // Действия при нажатии на "Удалить аккаунт"
+  const handleUpdateAccountClick = () => {
     console.log("Подтверждение удаления аккаунта");
-    // navigate('/delete-account'); // Пример перенаправления
   };
 
-  // Отображение информации о пользователе или индикатора загрузки
+  const closeCurrentRentalsPopup = () => {
+    setShowCurrentRentalsPopup(false);
+  };
+
+  const closeRentalHistoryPopup = () => {
+    setShowRentalHistoryPopup(false);
+  };
+
+  const closeAboutPopup = () => {
+    setShowAboutPopup(false);
+  };
+
   return (
     <div className={styles.main}>
-      {/* header */}
-
-      {/* содержимое */}
-      <div className={styles.content}>
-        <p
-          style={{
-            fontWeight: 700,
-            fontSize: "14px",
-            marginBottom: "28px",
-            marginTop: "15px",
-          }}
-        >
-          Ваш профиль
-        </p>
-
-        {loading ? (
-          <div>Загрузка данных пользователя...</div> // Индикатор загрузки
-        ) : user ? (
-          <>
-            {/*<Avatar />*/}
-            <div style={{ marginBottom: "20px" }}>
-              <img
-                src={`${process.env.REACT_APP_API_IMAGE_URL}${user.image}`}
-                alt={Avatar}
-              ></img>
-            </div>
-            <p
-              style={{ fontWeight: 700, fontSize: "16px", marginBottom: "5px" }}
+      {loading ? (
+        <div>Загрузка данных пользователя...</div>
+      ) : user ? (
+        <div className={styles.content}>
+          <p
+            style={{
+              fontWeight: 700,
+              fontSize: "14px",
+              marginBottom: "28px",
+              marginTop: "15px",
+            }}
+          >
+            Ваш профиль
+          </p>
+          <div style={{ marginBottom: "20px" }}>
+            <img
+              src={`${process.env.REACT_APP_API_IMAGE_URL}${user.image}`}
+              alt={Avatar}
+            />
+          </div>
+          <p style={{ fontWeight: 700, fontSize: "16px", marginBottom: "5px" }}>
+            {user.name}
+          </p>
+          <span className={styles.userName}>@{user.tg_name}</span>
+          <div className={styles.buttonList}>
+            <div
+              className={styles.buttonItem}
+              onClick={handleUpdateAccountClick}
             >
-              {user.name} {/* Отображаем имя пользователя */}
-            </p>
-            <span className={styles.userName}>@{user.tg_name}</span>{" "}
-            {/* Отображаем ник пользователя */}
-            {/* Список кнопок */}
-            <div className={styles.buttonList}>
-              <div
-                className={styles.buttonItem}
-                onClick={handleCurrentRentalsClick}
-              >
-                Текущие аренды <RightArrow />
-              </div>
-
-              <div
-                className={styles.buttonItem}
-                onClick={handleSwitchAccountClick}
-              >
-                Сменить аккаунт <RightArrow />
-              </div>
-              <div
-                className={styles.buttonItem}
-                onClick={handleRentalHistoryClick}
-              >
-                История аренд <RightArrow />
-              </div>
-              <div className={styles.buttonItem} onClick={handleAboutAppClick}>
-                О приложении <RightArrow />
-              </div>
-              <div
-                className={styles.buttonItem}
-                onClick={handleDeleteAccountClick}
-              >
-                Удалить аккаунт <RightArrow />
-              </div>
+              Изменить профиль
+              <RightArrow />
             </div>
-          </>
-        ) : (
-          <div>Пользователь не найден.</div> // Сообщение, если пользователь не найден
-        )}
-      </div>
+            <div
+              className={styles.buttonItem}
+              onClick={handleCurrentRentalsClick}
+            >
+              Текущие аренды <RightArrow />
+            </div>
+            <div
+              className={styles.buttonItem}
+              onClick={handleRentalHistoryClick}
+            >
+              История аренд <RightArrow />
+            </div>
+            <div className={styles.buttonItem} onClick={handleAboutAppClick}>
+              О приложении <RightArrow />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div>Пользователь не найден.</div>
+      )}
+
+      {showCurrentRentalsPopup && (
+        <div className={styles.popup}>
+          <div className={styles.popupContent}>
+            <h2>Текущие аренды</h2>
+            {currentRentals.length > 0 ? (
+              <ul>
+                {currentRentals.map((rent) => (
+                  <li key={rent.id}>
+                    {rent.user_id == userId
+                      ? "Взято в аренду"
+                      : "Отдано в аренду"}
+                    <br />
+                    {rent.title} - {rent.start_date} - {rent.end_date}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div>Нет текущих аренд.</div>
+            )}
+            <button onClick={closeCurrentRentalsPopup}>Закрыть</button>
+          </div>
+        </div>
+      )}
+
+      {showRentalHistoryPopup && (
+        <div className={styles.popup}>
+          <div className={styles.popupContent}>
+            <h2>История аренд</h2>
+            {rentalHistory.length > 0 ? (
+              <ul>
+                {rentalHistory.map((rent) => (
+                  <li key={rent.id}>
+                    {rent.title} - {rent.start_date} - {rent.end_date}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div>Нет истории аренд.</div>
+            )}
+            <button onClick={closeRentalHistoryPopup}>Закрыть</button>
+          </div>
+        </div>
+      )}
+      {showAboutPopup && (
+        <div className={styles.popup}>
+          <div className={styles.popupContent}>
+            <h2>О приложении</h2>
+            <p>
+              Наше приложение - это платформа, где вы можете легко и безопасно
+              арендовать и сдавать вещи в аренду. Мы предлагаем широкий выбор
+              предложений, удобный поиск и надежные инструменты для организации
+              процесса аренды. Присоединяйтесь к нашему сообществу и откройте
+              для себя новые возможности!
+            </p>
+            <button onClick={closeAboutPopup}>Закрыть</button>
+          </div>
+        </div>
+      )}
+
       <Menu tg_id={userId} />
     </div>
   );

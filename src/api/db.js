@@ -215,6 +215,22 @@ class db {
       throw error;
     }
   }
+
+  async getAllRents(tg_id) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}getAllRents/${tg_id}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in getAllRents:", error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new db();
