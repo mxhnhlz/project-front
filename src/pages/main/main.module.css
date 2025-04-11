@@ -108,11 +108,16 @@
 }
 .productDescription {
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Количество строк */
-  -webkit-box-orient: vertical;
+
   overflow: hidden;
   text-overflow: ellipsis;
-  max-height: 36px; /* Примерное значение для двух строк */
+
+  font-size: 13px;
+  line-height: 1.4;
+  max-height: calc(1.4em * 2);
+
+  width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .productName h1 {

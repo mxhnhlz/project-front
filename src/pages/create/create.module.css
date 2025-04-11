@@ -1,0 +1,186 @@
+.main {
+  font-family: 'Inter', serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+p {
+  margin: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Контент будет выравниваться сверху */
+  align-items: center;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.form1 {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 90%;
+  box-sizing: border-box;
+  flex-grow: 1;
+}
+
+.imageUpload {
+  gap: 2px; /* Увеличиваем расстояние между изображениями */
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  width: 100%;
+  flex-grow: 1; /* Обеспечиваем, чтобы контейнер с изображениями занимал оставшееся пространство */
+  display: flex; /* Включаем флекс-контейнер для размещения изображений */
+  flex-direction: row; /* Горизонтальное размещение изображений */
+  flex-wrap: wrap;
+}
+
+.imageLabel {
+  width: 100%;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+.imageLimit {
+  color: #51515191;
+}
+.bigImageLabel {
+  width: 100%;
+  height: 50vh;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+}
+
+.bigPlus {
+  font-size: 48px;
+  color: #aaa;
+}
+
+.plus {
+  font-size: 24px;
+  color: #ccc;
+}
+
+.preview {
+  margin-top: 10px;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  background-color: #fff;
+}
+
+.textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  resize: none;
+  background-color: #fff;
+  min-height: 80px;
+}
+
+.button {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 30px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  position: fixed; /* Сделать хедер фиксированным */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 55px;
+  background-color: rgba(180, 180, 180, 0.1);
+  backdrop-filter: blur(0px);
+  z-index: 100; /* Даем высокий z-index, чтобы он был поверх других элементов */
+}
+.header h1 {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 44px;
+  margin: 0;
+
+  margin-left: 15px;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  font-size: 20px;
+  padding: 0 12px;
+  cursor: pointer;
+  color: #333;
+}
+
+/* Первый инпут (жирный текст, размер шрифта 25px, черный цвет текста) */
+.input1 {
+  background-color: transparent; /* Прозрачный фон */
+  padding: 10px;
+  border-radius: 5px;
+  color: #000000 !important; /* Черный цвет текста с приоритетом */
+  font-size: 25px; /* Размер шрифта */
+  font-weight: bold; /* Жирный текст */
+  outline: none; /* Убираем стандартное выделение */
+  border: none; /* Почти невидимый бордер */
+}
+
+/* Второй инпут (без жирности, размер шрифта 25px, черный цвет текста) */
+.input2 {
+  background-color: transparent; /* Прозрачный фон */
+  padding: 10px;
+  border-radius: 5px;
+  color: #000000 !important; /* Черный цвет текста с приоритетом */
+  font-size: 25px; /* Размер шрифта */
+  font-weight: normal; /* Без жирного текста */
+  outline: none; /* Убираем стандартное выделение */
+  border: none; /* Почти невидимый бордер */
+}
+
+/* Для третьего инпута и textarea — серый цвет текста */
+.input3,
+.textarea {
+  background-color: transparent; /* Прозрачный фон */
+  padding: 10px;
+  border-radius: 5px;
+  color: #808080; /* Серый цвет текста */
+  font-size: 12px; /* Размер шрифта */
+  outline: none; /* Убираем стандартное выделение */
+  border: 1px solid rgba(0, 0, 0, 0.1); /* Почти невидимый бордер */
+}
+
+.textarea {
+  resize: none; /* Убираем возможность изменения размера */
+  min-height: 80px;
+}

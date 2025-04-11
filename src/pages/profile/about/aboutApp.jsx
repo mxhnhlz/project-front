@@ -11,6 +11,7 @@ function AboutApp() {
     // console.log("Удаление аккаунта...");
   }
   const { tg_id } = useParams()
+  const userId = tg_id || 0
 
   const handleGoBack = () => {
     navigate(`/Auth/${tg_id}`)
@@ -43,7 +44,7 @@ function AboutApp() {
           Назад
         </Button>
       </div>
-      <Menu />
+      <Menu tg_id={userId} />
     </div>
   )
 }
