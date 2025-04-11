@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; // Import useState and useEffect
 import styles from "./Profile.module.css";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom"; // Import useParams
 import Avatar from "./avatar";
 import RightArrow from "./rightArrow";
 import Menu from "../components/menu/Menu";
 import db from "../../api/db";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
   const { tg_id } = useParams();
@@ -27,158 +28,116 @@ function Profile() {
         const allRents = await db.getAllRents(userId);
         setCurrentRentals(allRents.currentRents);
         setRentalHistory(allRents.pastRents);
+        const userData = await db.getUser(userId); // Вызываем функцию getUser с tg_id
+        setUser(userData); // Обновляем состояние с данными пользователя
       } catch (error) {
-        console.error("Ошибка при получении данных:", error);
+        console.error("Ошибка при получении данных пользователя:", error);
+        // Можно добавить обработку ошибок (например, отображение сообщения об ошибке)
       } finally {
-        setLoading(false);
+        setLoading(false); // Загрузка завершена, скрываем индикатор
       }
     };
 
-    fetchInitialData();
-  }, [userId]);
-
-  const handleRentalHistoryClick = () => {
-    setShowRentalHistoryPopup(true);
-  };
+    fetchUser(); // Вызываем функцию fetchUser при монтировании компонента
+  }, [userId]); // Зависимость: useEffect будет вызываться только при изменении tg_id
 
   const handleCurrentRentalsClick = () => {
-    setShowCurrentRentalsPopup(true);
+    navigate(`/current-rentals/${userId}`);
+  };
+
+  const handleSwitchAccountClick = () => {
+    navigate(`/switch-account/${userId}`);
+  };
+
+  const handleRentalHistoryClick = () => {
+    navigate(`/rental-history/${userId}`);
   };
 
   const handleAboutAppClick = () => {
-    setShowAboutPopup(true);
+    navigate(`/about-app/${userId}`);
   };
 
-  const handleUpdateAccountClick = () => {
-    console.log("Подтверждение удаления аккаунта");
-  };
-
-  const closeCurrentRentalsPopup = () => {
-    setShowCurrentRentalsPopup(false);
-  };
-
-  const closeRentalHistoryPopup = () => {
-    setShowRentalHistoryPopup(false);
-  };
-
-  const closeAboutPopup = () => {
-    setShowAboutPopup(false);
+  const handleDeleteAccountClick = () => {
+    navigate(`/delete-account/${userId}`);
   };
 
   return (
     <div className={styles.main}>
-      {loading ? (
-        <div>Загрузка данных пользователя...</div>
-      ) : user ? (
-        <div className={styles.content}>
-          <p
-            style={{
-              fontWeight: 700,
-              fontSize: "14px",
-              marginBottom: "28px",
-              marginTop: "15px",
-            }}
-          >
-            Ваш профиль
-          </p>
-          <div style={{ marginBottom: "20px" }}>
-            <img
-              src={`${process.env.REACT_APP_API_IMAGE_URL}${user.image}`}
-              alt={Avatar}
-            />
-          </div>
-          <p style={{ fontWeight: 700, fontSize: "16px", marginBottom: "5px" }}>
-            {user.name}
-          </p>
-          <span className={styles.userName}>@{user.tg_name}</span>
-          <div className={styles.buttonList}>
-            <div
-              className={styles.buttonItem}
-              onClick={handleUpdateAccountClick}
-            >
-              Изменить профиль
-              <RightArrow />
-            </div>
-            <div
-              className={styles.buttonItem}
-              onClick={handleCurrentRentalsClick}
-            >
-              Текущие аренды <RightArrow />
-            </div>
-            <div
-              className={styles.buttonItem}
-              onClick={handleRentalHistoryClick}
-            >
-              История аренд <RightArrow />
-            </div>
-            <div className={styles.buttonItem} onClick={handleAboutAppClick}>
-              О приложении <RightArrow />
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div>Пользователь не найден.</div>
-      )}
+      {/* header */}
 
-      {showCurrentRentalsPopup && (
-        <div className={styles.popup}>
-          <div className={styles.popupContent}>
-            <h2>Текущие аренды</h2>
-            {currentRentals.length > 0 ? (
-              <ul>
-                {currentRentals.map((rent) => (
-                  <li key={rent.id}>
-                    {rent.user_id == userId
-                      ? "Взято в аренду"
-                      : "Отдано в аренду"}
-                    <br />
-                    {rent.title} - {rent.start_date} - {rent.end_date}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div>Нет текущих аренд.</div>
-            )}
-            <button onClick={closeCurrentRentalsPopup}>Закрыть</button>
-          </div>
-        </div>
-      )}
+      {/* содержимое */}
+      <div className={styles.content}>
+        <p
+          style={{
+            fontWeight: 700,
+            fontSize: "14px",
+            marginBottom: "28px",
+            marginTop: "15px",
+          }}
+        >
+          Ваш профиль
+        </p>
 
-      {showRentalHistoryPopup && (
-        <div className={styles.popup}>
-          <div className={styles.popupContent}>
-            <h2>История аренд</h2>
-            {rentalHistory.length > 0 ? (
-              <ul>
-                {rentalHistory.map((rent) => (
-                  <li key={rent.id}>
-                    {rent.title} - {rent.start_date} - {rent.end_date}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div>Нет истории аренд.</div>
-            )}
-            <button onClick={closeRentalHistoryPopup}>Закрыть</button>
-          </div>
-        </div>
-      )}
-      {showAboutPopup && (
-        <div className={styles.popup}>
-          <div className={styles.popupContent}>
-            <h2>О приложении</h2>
-            <p>
-              Наше приложение - это платформа, где вы можете легко и безопасно
-              арендовать и сдавать вещи в аренду. Мы предлагаем широкий выбор
-              предложений, удобный поиск и надежные инструменты для организации
-              процесса аренды. Присоединяйтесь к нашему сообществу и откройте
-              для себя новые возможности!
+        {loading ? (
+          <div>Загрузка данных пользователя...</div> // Индикатор загрузки
+        ) : user ? (
+          <>
+            {/*<Avatar />*/}
+            <div style={{ marginBottom: "20px" }}>
+              <img
+                src={`${process.env.REACT_APP_API_IMAGE_URL}${user.image}`}
+                alt={Avatar}
+                style={{
+                  width: "82px",
+                  height: "82px",
+                  objectFit: "cover",
+                  borderRadius: "32px",
+                }}
+              ></img>
+            </div>
+            <p
+              style={{ fontWeight: 700, fontSize: "16px", marginBottom: "5px" }}
+            >
+              {user.name} {/* Отображаем имя пользователя */}
             </p>
-            <button onClick={closeAboutPopup}>Закрыть</button>
-          </div>
-        </div>
-      )}
+            <span className={styles.userName}>@{user.tg_name}</span>{" "}
+            {/* Отображаем ник пользователя */}
+            {/* Список кнопок */}
+            <div className={styles.buttonList}>
+              <div
+                className={styles.buttonItem}
+                onClick={handleCurrentRentalsClick}
+              >
+                Текущие аренды <RightArrow />
+              </div>
 
+              <div
+                className={styles.buttonItem}
+                onClick={handleSwitchAccountClick}
+              >
+                Сменить аккаунт <RightArrow />
+              </div>
+              <div
+                className={styles.buttonItem}
+                onClick={handleRentalHistoryClick}
+              >
+                История аренд <RightArrow />
+              </div>
+              <div className={styles.buttonItem} onClick={handleAboutAppClick}>
+                О приложении <RightArrow />
+              </div>
+              <div
+                className={styles.buttonItem}
+                onClick={handleDeleteAccountClick}
+              >
+                Удалить аккаунт <RightArrow />
+              </div>
+            </div>
+          </>
+        ) : (
+          <div>Пользователь не найден.</div> // Сообщение, если пользователь не найден
+        )}
+      </div>
       <Menu tg_id={userId} />
     </div>
   );
