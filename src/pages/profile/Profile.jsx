@@ -8,15 +8,12 @@ import db from "../../api/db";
 import { useNavigate } from "react-router-dom";
 
 function Profile() {
-  const { tg_id } = useParams();
+  const navigate = useNavigate();
+  const { tg_id, profile_id } = useParams();
   const userId = tg_id || 0;
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [currentRentals, setCurrentRentals] = useState([]);
-  const [rentalHistory, setRentalHistory] = useState([]);
-  const [showCurrentRentalsPopup, setShowCurrentRentalsPopup] = useState(false);
-  const [showRentalHistoryPopup, setShowRentalHistoryPopup] = useState(false);
-  const [showAboutPopup, setShowAboutPopup] = useState(false);
+  const profileId = profile_id || userId;
+  const [user, setUser] = useState(null); // Состояние для хранения данных пользователя
+  const [loading, setLoading] = useState(true); // Состояние для отображения индикатора загрузки
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -24,12 +21,6 @@ function Profile() {
       try {
         const userData = await db.getUser(userId);
         setUser(userData);
-
-        const allRents = await db.getAllRents(userId);
-        setCurrentRentals(allRents.currentRents);
-        setRentalHistory(allRents.pastRents);
-        const userData = await db.getUser(userId); // Вызываем функцию getUser с tg_id
-        setUser(userData); // Обновляем состояние с данными пользователя
       } catch (error) {
         console.error("Ошибка при получении данных пользователя:", error);
         // Можно добавить обработку ошибок (например, отображение сообщения об ошибке)
@@ -37,8 +28,7 @@ function Profile() {
         setLoading(false); // Загрузка завершена, скрываем индикатор
       }
     };
-
-    fetchUser(); // Вызываем функцию fetchUser при монтировании компонента
+    fetchInitialData();
   }, [userId]); // Зависимость: useEffect будет вызываться только при изменении tg_id
 
   const handleCurrentRentalsClick = () => {
