@@ -1,4 +1,24 @@
 class db {
+  async getUser(tg_id) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}getUser/${tg_id}`
+      );
+      if (!response.ok) {
+        throw new Error(
+          `Ошибка при запросе: ${response.status} ${response.statusText}`
+        );
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Ошибка при получении пользователя:", error);
+      throw error;
+    }
+  }
+  // =========================================
+  // Items
+  // =========================================
   async getItems(tg_id = 0, lastItemId = 0, limit = 10) {
     try {
       const url = new URL(`${process.env.REACT_APP_API_BASE_URL}getOfferList`);
@@ -17,24 +37,6 @@ class db {
       return data;
     } catch (error) {
       console.error("Ошибка при получении товаров:", error);
-      throw error;
-    }
-  }
-
-  async getUser(tg_id) {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}getUser/${tg_id}`
-      );
-      if (!response.ok) {
-        throw new Error(
-          `Ошибка при запросе: ${response.status} ${response.statusText}`
-        );
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Ошибка при получении пользователя:", error);
       throw error;
     }
   }
@@ -71,6 +73,66 @@ class db {
     }
   }
 
+  async deleteOffer(id) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}deleteOffer/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in deleteOffer:", error);
+      throw error;
+    }
+  }
+
+  async createOffer(tg_id, title, info, price) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}offer`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            // Создаем объект здесь
+            tg_id: tg_id,
+            title: title,
+            info: info,
+            price: price,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in createOffer:", error);
+      throw error;
+    }
+  }
+  // =========================================
+  // Rents
+  // =========================================
   async createRent(
     offer_id,
     user_id,
@@ -232,45 +294,23 @@ class db {
     }
   }
 
-  async deleteOffer(id) {
+  // =========================================
+  // Rates
+  // =========================================
+
+  async createRate(giver_id, receiver_id, score) {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}deleteOffer/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(
-          `HTTP error! Status: ${response.status}, Message: ${errorText}`
-        );
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error in deleteOffer:", error);
-      throw error;
-    }
-  }
-
-  async createOffer(tg_id, title, info, price) {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}offer`,
+        `${process.env.REACT_APP_API_BASE_URL}rates`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            // Создаем объект здесь
-            tg_id: tg_id,
-            title: title,
-            info: info,
-            price: price,
+            giver_id: giver_id,
+            receiver_id: receiver_id,
+            score: score,
           }),
         }
       );
@@ -285,8 +325,283 @@ class db {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("Error in createOffer:", error);
+      console.error("Error in createRate:", error);
       throw error;
+    }
+  }
+
+  async updateRate(id, score) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}rates/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            score: score,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in updateRate:", error);
+      throw error;
+    }
+  }
+
+  async getRate(id) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}rates/${id}`
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in getRate:", error);
+      throw error;
+    }
+  }
+
+  async getRatesByReceiver(receiver_id) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}rates/receiver/${receiver_id}`
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in getRatesByReceiver:", error);
+      throw error;
+    }
+  }
+
+  // =========================================
+  // Comments
+  // =========================================
+
+  async createComment(giver_id, receiver_id, text) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}comments`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            giver_id: giver_id,
+            receiver_id: receiver_id,
+            text: text,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in createComment:", error);
+      throw error;
+    }
+  }
+
+  async updateComment(id, text) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}comments/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: text,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in updateComment:", error);
+      throw error;
+    }
+  }
+
+  async getComment(id) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}comments/${id}`
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in getComment:", error);
+      throw error;
+    }
+  }
+
+  async getCommentsByReceiver(receiver_id) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}comments/receiver/${receiver_id}`
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in getCommentsByReceiver:", error);
+      throw error;
+    }
+  }
+
+  async createOfferWithImages(tg_id, title, info, price, imageFiles) {
+    try {
+      // 1. Создаём оффер
+      const offerData = {
+        tg_id: tg_id,
+        title: title,
+        info: info,
+        price: price,
+      };
+
+      const createOfferResponse = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}offer`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(offerData),
+        }
+      );
+      console.log(createOfferResponse);
+      if (!createOfferResponse.ok) {
+        const errorText = await createOfferResponse.text();
+        throw new Error(
+          `Failed to create offer: ${createOfferResponse.status} - ${errorText}`
+        );
+      }
+
+      const createdOffer = await createOfferResponse.json();
+      const offerId = createdOffer.id; // Получаем ID созданного оффера
+      const imageUrls = [];
+
+      // 2. Загружаем картинки (если есть)
+      if (imageFiles && imageFiles.length > 0) {
+        for (const imageFile of imageFiles) {
+          const fileName = imageFile.name;
+          const fileExtension = fileName.split(".").pop(); // Получаем расширение файла
+          const timestamp = Date.now();
+          const newFileName = `${timestamp}-${tg_id}.${fileExtension}`; // Формируем новое имя файла
+
+          const formData = new FormData();
+          formData.append("image", imageFile, newFileName);
+
+          const uploadResponse = await fetch(
+            `${process.env.REACT_APP_API_BASE_URL}uploadImage`,
+            {
+              // Используем тот же API endpoint
+              method: "POST",
+              body: formData,
+            }
+          );
+
+          if (!uploadResponse.ok) {
+            const errorText = await uploadResponse.text();
+            throw new Error(
+              `Failed to upload image: ${uploadResponse.status} - ${errorText}`
+            );
+          }
+
+          const uploadResult = await uploadResponse.json(); // Получаем результат загрузки (URL)
+          imageUrls.push(uploadResult.imageUrl); // Добавляем URL в массив
+        }
+        // 3. Обновляем оффер с ссылками на картинки
+        if (imageUrls.length > 0) {
+          const updateImagesResponse = await fetch(
+            `${process.env.REACT_APP_API_BASE_URL}uploadOfferImages`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                id: offerId,
+                images: imageUrls,
+              }),
+            }
+          );
+
+          if (!updateImagesResponse.ok) {
+            const errorText = await updateImagesResponse.text();
+            throw new Error(
+              `Failed to update offer images: ${updateImagesResponse.status} - ${errorText}`
+            );
+          }
+          const updatedOffer = await updateImagesResponse.json();
+        }
+      }
+
+      return createdOffer; // Возвращаем созданный оффер (с ID)
+    } catch (error) {
+      console.error("Error in createOfferWithImages:", error);
+      throw error; // Пробрасываем ошибку выше
     }
   }
 }
