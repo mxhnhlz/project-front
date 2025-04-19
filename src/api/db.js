@@ -330,22 +330,26 @@ class db {
     }
   }
 
-  async updateRate(id, score) {
+  async getUserRate(userId, profileId) {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}rates/${id}`,
+        `${process.env.REACT_APP_API_BASE_URL}rates/getRateByIds`,
         {
-          method: "PUT",
+          method: "POST", // Используем POST
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json", // Указываем тип контента
           },
           body: JSON.stringify({
-            score: score,
+            user_id: userId,
+            profile_id: profileId,
           }),
         }
       );
 
       if (!response.ok) {
+        if (response.status === 404) {
+          return null;
+        }
         const errorText = await response.text();
         throw new Error(
           `HTTP error! Status: ${response.status}, Message: ${errorText}`
@@ -355,32 +359,10 @@ class db {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("Error in updateRate:", error);
+      console.error("Error in getUserRate:", error);
       throw error;
     }
   }
-
-  async getRate(id) {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}rates/${id}`
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(
-          `HTTP error! Status: ${response.status}, Message: ${errorText}`
-        );
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error in getRate:", error);
-      throw error;
-    }
-  }
-
   async getRatesByReceiver(receiver_id) {
     try {
       const response = await fetch(
@@ -398,6 +380,62 @@ class db {
       return data;
     } catch (error) {
       console.error("Error in getRatesByReceiver:", error);
+      throw error;
+    }
+  }
+  async deleteRate(userId, profileId) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}rates/user/${userId}/profile/${profileId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null;
+        }
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      return; // No content
+    } catch (error) {
+      console.error("Error in deleteUserRate:", error);
+      throw error;
+    }
+  }
+
+  async updateRate(userId, profileId, score) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}rates/user/${userId}/profile/${profileId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ score: score }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error in updateRate:", error);
       throw error;
     }
   }
@@ -530,7 +568,6 @@ class db {
           body: JSON.stringify(offerData),
         }
       );
-      console.log(createOfferResponse);
       if (!createOfferResponse.ok) {
         const errorText = await createOfferResponse.text();
         throw new Error(

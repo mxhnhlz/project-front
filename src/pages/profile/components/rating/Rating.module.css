@@ -1,0 +1,138 @@
+/* Rating.module.css */
+.ratingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  min-height: 60px; /* Фиксированная высота */
+}
+
+.rateButton {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  min-width: 120px;
+  min-height: 55px;
+}
+
+.rateButton:hover {
+  background-color: #0056b3;
+}
+
+.ratingOptions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 0.5em;
+}
+
+.ratingOption {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 0 2px;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  border: none;
+  background: none;
+}
+
+.ratingOption:hover {
+  color: #007bff;
+  font-weight: bold;
+  transform: scale(1.1);
+}
+
+.ratingButton {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  min-width: 120px;
+  min-height: 55px;
+}
+
+.ratingButton:hover {
+  background-color: #007bff;
+}
+
+.confirmationModal {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.confirmationButton {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  background-color: #007bff;
+  color: white;
+}
+
+.confirmationButton:hover {
+  background-color: #0056b3;
+}
+
+.confirmationButtonDelete {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  background-color: #dc3545;
+  color: white;
+}
+
+.confirmationButtonDelete:hover {
+  background-color: #c82333;
+}
+
+/* Стили для звезд рейтинга */
+.starRating {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.star {
+  color: #ddd;
+  font-size: 24px;
+  position: relative;
+  margin: 0 2px;
+}
+
+.starFilled {
+  color: #007bff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}

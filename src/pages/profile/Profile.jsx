@@ -3,13 +3,14 @@ import React, { useState, useEffect } from "react";
 import styles from "./Profile.module.css";
 import { useParams } from "react-router-dom";
 import Avatar from "./avatar";
-import RightArrow from "./rightArrow";
 import Menu from "../components/menu/Menu";
 import db from "../../api/db";
 import { useNavigate } from "react-router-dom";
-import Comments from "./comments/Сomments"; // Import Comments component
-import RatingModal from "./rating/RatingModal";
-import EditRatingModal from "./rating/EditRatingModal";
+import Comments from "./components/comments/Сomments";
+import ProfileOptions from "./components/profileOptions/ProfileOptions"; // Импортируем компонент ProfileOptions
+import Rating from "./components/rating/Rating";
+import Stars from "./components/Stars/Stars";
+
 function Profile() {
   const navigate = useNavigate();
   const { tg_id, profile_id } = useParams();
@@ -17,22 +18,16 @@ function Profile() {
   const profileId = profile_id || userId;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showComments, setShowComments] = useState(false); // <-- Добавляем состояние
-  const [isOwner, setIsOwner] = useState(userId === profileId); // Проверка, владелец ли
-  const [rating, setRating] = useState(null); // <-- Текущий рейтинг, который поставил юзер
-  const [showRatingModal, setShowRatingModal] = useState(false); // <-- Отображение окошка с рейтингом
-  const [showEditRatingModal, setShowEditRatingModal] = useState(false); // <-- Отображение окошка для редактирования рейтинга
-
+  const [avg, setAvg] = useState(0.0);
+  const [isOwner, setIsOwner] = useState(true); // Проверка, владелец ли
   useEffect(() => {
     const fetchInitialData = async () => {
       setLoading(true);
       try {
         const userData = await db.getUser(profileId);
         setUser(userData);
-        const ratingData = await db.getRate()
+        setIsOwner(userId === profileId);
         // Получаем рейтинг, который уже поставил текущий юзер этому профилю
-        const userRating = await db.getUserRate(userId, profileId);
-        setRating(userRating); // Если рейтинга нет, то будет null
       } catch (error) {
         console.error("Ошибка при получении данных пользователя:", error);
       } finally {
@@ -42,97 +37,56 @@ function Profile() {
     fetchInitialData();
   }, [profileId, userId]);
 
-  const handleCurrentRentalsClick = () => {
-    navigate(`/current-rentals/${userId}`);
-  };
-
-  const handleRentalHistoryClick = () => {
-    navigate(`/rental-history/${userId}`);
-  };
-
-  const handleAboutAppClick = () => {
-    navigate(`/about-app/${userId}`);
-  };
-
-  const handleDeleteAccountClick = () => {
-    navigate(`/delete-account/${userId}`);
-  };
-
-  const toggleComments = () => {
-    setShowComments(!showComments);
-  };
-
-  const handleOpenRatingModal = () => {
-    setShowRatingModal(true);
-  };
-
-  const handleCloseRatingModal = () => {
-    setShowRatingModal(false);
-  };
-
-  const handleRatingSubmit = async (selectedRating) => {
-    try {
-      // Отправляем рейтинг на сервер (новый)
-      await db.createRate(userId, profileId, selectedRating);
-
-      // Обновляем состояние рейтинга
-      setRating({
-        giver_id: userId,
-        receiver_id: profileId,
-        score: selectedRating,
-      });
-
-      // Закрываем окошко
-      handleCloseRatingModal();
-    } catch (error) {
-      console.error("Ошибка при отправке рейтинга:", error);
-      // TODO: Обработка ошибки
+  useEffect(() => {
+    if (user && user.rating_count > 0) {
+      setAvg(parseFloat((user.total_rating / user.rating_count).toFixed(2)));
+    } else {
+      setAvg(0.0);
     }
+  }, [user]);
+
+  const handleRatingChange = (newRating, oldRating, action) => {
+    setUser((prevUser) => {
+      if (!prevUser) return prevUser;
+
+      let newTotalRating = parseInt(prevUser.total_rating);
+      let newRatingCount = parseInt(prevUser.rating_count);
+
+      switch (action) {
+        case "create":
+          // Если это новая оценка, просто добавляем её
+          newTotalRating += newRating;
+          newRatingCount += 1;
+          break;
+        case "update":
+          // Если это изменение оценки, вычитаем старую оценку и прибавляем новую
+          newTotalRating = newTotalRating - oldRating + newRating;
+          break;
+        case "delete":
+          // Если это удаление оценки, вычитаем её
+          newTotalRating -= oldRating;
+          newRatingCount -= 1;
+          break;
+        default:
+          console.warn("Unknown action:", action);
+          return prevUser; // Ничего не меняем, если действие неизвестно
+      }
+
+      return {
+        ...prevUser,
+        total_rating: newTotalRating,
+        rating_count: newRatingCount,
+        last_rating: newRating, // Обновляем last_rating только при создании и изменении
+      };
+    });
   };
-
-  const handleOpenEditRatingModal = () => {
-    setShowEditRatingModal(true);
-  };
-
-  const handleCloseEditRatingModal = () => {
-    setShowEditRatingModal(false);
-  };
-
-  const handleRatingUpdate = async (newRating) => {
-    try {
-      // Обновляем рейтинг на сервере
-      await db.updateRate(rating.id, newRating);
-
-      // Обновляем состояние рейтинга
-      setRating({
-        giver_id: userId,
-        receiver_id: profileId,
-        score: newRating,
-      });
-
-      // Закрываем окошко
-      handleCloseEditRatingModal();
-    } catch (error) {
-      console.error("Ошибка при обновлении рейтинга:", error);
-      // TODO: Обработка ошибки
-    }
-  };
-
-  const handleRatingDelete = async () => {
-    try {
-      // Удаляем рейтинг с сервера
-      await db.deleteRate(rating.id);
-
-      // Обнуляем состояние рейтинга
-      setRating(null);
-
-      // Закрываем окошко
-      handleCloseEditRatingModal();
-    } catch (error) {
-      console.error("Ошибка при удалении рейтинга:", error);
-      // TODO: Обработка ошибки
-    }
-  };
+  function declOfNum(number, words) {
+    return words[
+      number % 100 > 4 && number % 100 < 20
+        ? 2
+        : [2, 0, 1, 1, 1, 2][number % 10 < 5 ? number % 10 : 5]
+    ];
+  }
 
   return (
     <div className={styles.main}>
@@ -148,7 +102,7 @@ function Profile() {
             marginTop: "15px",
           }}
         >
-          Ваш профиль
+          {isOwner ? "Ваш профиль" : "Профиль пользователя"}
         </p>
 
         {loading ? (
@@ -174,87 +128,28 @@ function Profile() {
             </p>
             <span className={styles.userName}>@{user.tg_name}</span>
             {/* Вывод рейтинга */}
-            <div>
-              Рейтинг: {user.total_rating} ({user.rating_count} оценок)
-            </div>
-
-            {/* Кнопка для выставления/редактирования рейтинга */}
+            <Stars avg={avg} />
+            <>
+              ✪{avg} ({user.rating_count}{" "}
+              {declOfNum(user.rating_count, ["оценка", "оценки", "оценок"])})
+            </>
+            {/* Rating component */}
             {!isOwner && (
-              <>
-                {rating ? (
-                  <button onClick={handleOpenEditRatingModal}>
-                    Ваша оценка: {rating.score}
-                  </button>
-                ) : (
-                  <button onClick={handleOpenRatingModal}>
-                    Оставить оценку
-                  </button>
-                )}
-              </>
+              <Rating
+                userId={userId}
+                profileId={profileId}
+                db={db}
+                onRatingChange={handleRatingChange}
+              ></Rating>
             )}
 
-            {/* Кнопка "Комментарии" */}
-            <button onClick={toggleComments}>
-              {showComments ? "Скрыть комментарии" : "Показать комментарии"}
-            </button>
-
-            {/* Список кнопок, только для владельца */}
-            {isOwner && (
-              <div className={styles.buttonList}>
-                <div
-                  className={styles.buttonItem}
-                  onClick={handleCurrentRentalsClick}
-                >
-                  Текущие аренды <RightArrow />
-                </div>
-
-                <div
-                  className={styles.buttonItem}
-                  onClick={handleRentalHistoryClick}
-                >
-                  История аренд <RightArrow />
-                </div>
-                <div
-                  className={styles.buttonItem}
-                  onClick={handleAboutAppClick}
-                >
-                  О приложении <RightArrow />
-                </div>
-                <div
-                  className={styles.buttonItem}
-                  onClick={handleDeleteAccountClick}
-                >
-                  Удалить аккаунт <RightArrow />
-                </div>
-              </div>
-            )}
+            {isOwner && <ProfileOptions userId={userId} />}
+            <Comments userId={profileId} currentUserId={userId} />
           </>
         ) : (
           <div>Пользователь не найден.</div>
         )}
       </div>
-
-      {/* Компонент комментариев */}
-      {showComments && <Comments userId={profileId} currentUserId={userId} />}
-
-      {/* Окошко для выставления рейтинга */}
-      {showRatingModal && (
-        <RatingModal
-          onClose={handleCloseRatingModal}
-          onSubmit={handleRatingSubmit}
-        />
-      )}
-
-      {/* Окошко для редактирования рейтинга */}
-      {showEditRatingModal && (
-        <EditRatingModal
-          onClose={handleCloseEditRatingModal}
-          onUpdate={handleRatingUpdate}
-          onDelete={handleRatingDelete}
-          rating={rating.score} // Передаем текущий рейтинг
-        />
-      )}
-
       <Menu tg_id={userId} />
     </div>
   );

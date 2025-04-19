@@ -12,7 +12,7 @@ import styles from "./menu.module.css";
 function Menu({ tg_id }) {
   const navigate = useNavigate();
   const goToProfile = () => {
-    navigate(`/Profile/${tg_id}`);
+    navigate(`/Profile/${tg_id}/${tg_id}`);
   };
   const goToMessages = () => {
     navigate(`/Messages/${tg_id}`);
