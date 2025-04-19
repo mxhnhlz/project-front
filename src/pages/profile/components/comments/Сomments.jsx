@@ -21,7 +21,6 @@ function Comments({ userId, currentUserId }) {
         const fetchedComments = await db.getCommentsByReceiver(userId);
         const sortedComments = fetchedComments.sort((a, b) => {
           if ((a.giver.id === currentUserId) ^ (b.giver.id === currentUserId)) {
-            console.log(a.giver.id, b.giver.id, currentUserId);
             return a.giver.id === currentUserId ? -1 : 1;
           }
           return new Date(b.createdAt) - new Date(a.createdAt);
@@ -62,7 +61,7 @@ function Comments({ userId, currentUserId }) {
     }
   };
   const handleGoToOtherProfile = (comment) => {
-    navigate(`/profile/${userId}/${comment.giver.id}`);
+    navigate(`/profile/${currentUserId}/${comment.giver.id}`);
   };
   return (
     <div className={styles.commentsContainer}>

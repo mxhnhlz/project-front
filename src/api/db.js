@@ -130,6 +130,21 @@ class db {
       throw error;
     }
   }
+
+  async getAllOffers(ownerId) {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}getOfferByUser/${ownerId}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error in getAllOffers:", error);
+      throw error;
+    }
+  }
   // =========================================
   // Rents
   // =========================================

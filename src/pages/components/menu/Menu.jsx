@@ -5,7 +5,7 @@ import FavButton from "../icons/favButton";
 import MainMenu from "../icons/mainMenu";
 import ProfileButton from "../icons/profileButton";
 import CreateButton from "../icons/CreateButton";
-import MessagesButton from "../icons/messagesButton";
+//import MessagesButton from "../icons/messagesButton";
 
 import styles from "./menu.module.css";
 
@@ -14,9 +14,9 @@ function Menu({ tg_id }) {
   const goToProfile = () => {
     navigate(`/Profile/${tg_id}/${tg_id}`);
   };
-  const goToMessages = () => {
-    navigate(`/Messages/${tg_id}`);
-  };
+  // const goToMessages = () => {
+  //   navigate(`/Messages/${tg_id}`);
+  // };
   const goToMain = () => {
     navigate(`/${tg_id}`);
   };

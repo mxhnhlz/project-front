@@ -143,7 +143,7 @@ function Profile() {
               ></Rating>
             )}
 
-            {isOwner && <ProfileOptions userId={userId} />}
+            <ProfileOptions userId={profileId} currentUserId={userId} />
             <Comments userId={profileId} currentUserId={userId} />
           </>
         ) : (
