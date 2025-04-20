@@ -33,11 +33,6 @@ function CurrentRentals() {
     console.log("Выбран продукт:", product);
   };
 
-  const handleRentButtonClick = (product) => {
-    console.log("Связь с арендодателем:", product);
-    // Здесь можно добавить логику для связи с арендодателем/арендатором
-  };
-
   return (
     <div className={styles.main}>
       <div className={styles.searchCartWrapper}>
@@ -102,6 +97,7 @@ function CurrentRentals() {
                   <div className={styles.productStats}>
                     <Button
                       className={styles.rentButton}
+                      href={`https://telegram.me/${rent.tg_name}`}
                       variant="outlined"
                       sx={{
                         borderRadius: "12px",
@@ -113,7 +109,6 @@ function CurrentRentals() {
                           color: "white",
                         },
                       }}
-                      onClick={() => handleRentButtonClick(rent)}
                     >
                       {rent.user_id === userId
                         ? "Связь с арендодателем"
