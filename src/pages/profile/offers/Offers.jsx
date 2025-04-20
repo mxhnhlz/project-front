@@ -33,10 +33,6 @@ function Offers() {
     navigate(`/product/${tg_id}/${offer.id}`, { state: { product: offer } });
   };
 
-  if (loading) {
-    return <div className={styles.main}>Загрузка...</div>;
-  }
-
   return (
     <div className={styles.main}>
       <div className={styles.searchCartWrapper}>
@@ -64,6 +60,8 @@ function Offers() {
           <div className={styles.emptyMessage}>
             <p>Нет доступных объявлений</p>
           </div>
+        ) : loading ? (
+          <div className={styles.main}>Загрузка...</div>
         ) : (
           offers
             .filter((offer) =>

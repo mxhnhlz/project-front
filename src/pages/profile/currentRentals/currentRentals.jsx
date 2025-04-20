@@ -38,10 +38,6 @@ function CurrentRentals() {
     // Здесь можно добавить логику для связи с арендодателем/арендатором
   };
 
-  if (loading) {
-    return <div className={styles.main}>Загрузка...</div>;
-  }
-
   return (
     <div className={styles.main}>
       <div className={styles.searchCartWrapper}>
@@ -63,66 +59,71 @@ function CurrentRentals() {
           </button>
         </div>
       </div>
-
       <div className={styles.products}>
-        {rents
-          .filter((rent) =>
-            rent.title.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-          .map((rent, index) => (
-            <div className={styles.productContainer} key={index}>
-              <div
-                className={styles.productImg}
-                onClick={() => handleProductClick(rent)}
-              >
-                <img
-                  src={
-                    `${process.env.REACT_APP_API_IMAGE_URL}${rent.images[0]}` ||
-                    "./images/voidimg.png"
-                  }
-                  alt="арендуемый товар"
-                />
-              </div>
-              <div className={styles.productInfo}>
-                <div className={styles.productName}>
-                  <h1>{rent.title}</h1>
-                  <p className={styles.productRent}>
-                    {rent.user_id === userId
-                      ? "Арендовано у"
-                      : "Арендовано у вас"}
-                  </p>
-                  <p className={styles.productRent}>
-                    Начало:{" "}
-                    <span className={styles.green}>{rent.start_date}</span>
-                  </p>
-                  <p className={styles.productRent}>
-                    Конец: <span className={styles.red}>{rent.end_date}</span>
-                  </p>
+        {loading ? (
+          <div className={styles.main}>Загрузка...</div>
+        ) : rents.length === 0 ? (
+          <div className={styles.main}>Пусто...</div>
+        ) : (
+          rents
+            .filter((rent) =>
+              rent.title.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((rent, index) => (
+              <div className={styles.productContainer} key={index}>
+                <div
+                  className={styles.productImg}
+                  onClick={() => handleProductClick(rent)}
+                >
+                  <img
+                    src={
+                      `${process.env.REACT_APP_API_IMAGE_URL}${rent.images[0]}` ||
+                      "./images/voidimg.png"
+                    }
+                    alt="арендуемый товар"
+                  />
                 </div>
-                <div className={styles.productStats}>
-                  <Button
-                    className={styles.rentButton}
-                    variant="outlined"
-                    sx={{
-                      borderRadius: "12px",
-                      borderColor: "#006FFD",
-                      color: "#006FFD",
-                      padding: "8px 16px",
-                      "&:hover": {
-                        backgroundColor: "#006FFD",
-                        color: "white",
-                      },
-                    }}
-                    onClick={() => handleRentButtonClick(rent)}
-                  >
-                    {rent.user_id === userId
-                      ? "Связь с арендодателем"
-                      : "Связь с арендатором"}
-                  </Button>
+                <div className={styles.productInfo}>
+                  <div className={styles.productName}>
+                    <h1>{rent.title}</h1>
+                    <p className={styles.productRent}>
+                      {rent.user_id === userId
+                        ? "Арендовано у"
+                        : "Арендовано у вас"}
+                    </p>
+                    <p className={styles.productRent}>
+                      Начало:{" "}
+                      <span className={styles.green}>{rent.start_date}</span>
+                    </p>
+                    <p className={styles.productRent}>
+                      Конец: <span className={styles.red}>{rent.end_date}</span>
+                    </p>
+                  </div>
+                  <div className={styles.productStats}>
+                    <Button
+                      className={styles.rentButton}
+                      variant="outlined"
+                      sx={{
+                        borderRadius: "12px",
+                        borderColor: "#006FFD",
+                        color: "#006FFD",
+                        padding: "8px 16px",
+                        "&:hover": {
+                          backgroundColor: "#006FFD",
+                          color: "white",
+                        },
+                      }}
+                      onClick={() => handleRentButtonClick(rent)}
+                    >
+                      {rent.user_id === userId
+                        ? "Связь с арендодателем"
+                        : "Связь с арендатором"}
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+        )}
       </div>
       <Menu tg_id={userId} />
     </div>

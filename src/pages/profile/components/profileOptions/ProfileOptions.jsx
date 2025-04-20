@@ -24,7 +24,7 @@ function ProfileOptions({ userId, currentUserId }) {
   };
 
   const handleNewRentsClick = () => {
-    navigate(`/new-rents/${currentUserId}`);
+    //navigate(`/new-rents/${currentUserId}`);
   };
 
   // const handleDeleteAccountClick = () => {

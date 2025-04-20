@@ -158,6 +158,7 @@ class db {
     price = 0
   ) {
     try {
+      console.log({ start, end });
       const url = `${process.env.REACT_APP_API_BASE_URL}rent`;
       const response = await fetch(url, {
         method: "POST",

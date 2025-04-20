@@ -26,15 +26,19 @@ const MyCalendar = ({ offer, userId }) => {
   }, [offer.id]);
 
   const onChange = (date) => {
+    const normalizedDate = new Date(date);
+    normalizedDate.setHours(0, 0, 0, 0);
+
     if (selecting === "start") {
-      if (endDate < date || endDate === null) {
+      if (endDate < normalizedDate || endDate === null) {
         setSelecting("end");
-        setEndDate(date);
+        setEndDate(normalizedDate);
       }
-      setStartDate(date);
+      setStartDate(normalizedDate);
     } else {
-      if (startDate > date || startDate === null) setStartDate(date);
-      setEndDate(date);
+      if (startDate > normalizedDate || startDate === null)
+        setStartDate(normalizedDate);
+      setEndDate(normalizedDate);
     }
   };
 
@@ -170,7 +174,7 @@ const MyCalendar = ({ offer, userId }) => {
           className="sendRequestButton"
           onClick={handleSendRequest}
         >
-          Отправить запрос арендодателю
+          Отправить запрос
         </Button>
       </div>
       <div className={`${styles.error} ${isDateBlocked ? styles.show : ""}`}>
