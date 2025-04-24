@@ -1,0 +1,106 @@
+.main {
+  font-family: 'Inter', serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+p {
+  margin: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Контент будет выравниваться сверху */
+  align-items: center;
+  width: 100%;
+  flex-grow: 1;
+}
+.header {
+  display: flex;
+  align-items: center;
+  position: fixed; /* Сделать хедер фиксированным */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 55px;
+
+  backdrop-filter: blur(0px);
+  z-index: 100; /* Даем высокий z-index, чтобы он был поверх других элементов */
+}
+
+.header h1 {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 44px;
+  margin: 0;
+
+  margin-left: 15px;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  font-size: 20px;
+  padding: 0 12px;
+  cursor: pointer;
+  color: #333;
+}
+
+/* calendar */
+.modalContainer {
+  position: sticky;
+  background-color: white;
+  padding: 10px;
+  bottom: 0;
+  z-index: 1;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.cancelButton {
+  top: 10px;
+  right: 10px;
+  position: absolute;
+  background: none;
+  border: none;
+  color: #71727a;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cancelButtonContainer {
+  margin-bottom: 15px;
+}
+
+.cancelButton:hover {
+  text-decoration: none;
+}
+
+.calendarWrapper {
+  margin-bottom: 20px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: center;
+}
+
+.modalActions button {
+  width: 100%;
+  border-radius: 12px;
+  text-transform: none;
+  margin-bottom: 25px;
+}
+
+.cal {
+  background: white;
+  border: 0px solid #a0a096;
+  font-family: 'Inter', serif;
+  line-height: 1.125em;
+}

@@ -22,6 +22,7 @@ import RentalHistory from './pages/profile/rentalHistory/rentalHistory'
 const router = createBrowserRouter([
   { path: '/:tg_id', element: <Main /> },
   { path: '/', element: <Main /> },
+  { path: '/Profile/:tg_id/:profile_id', element: <Profile /> },
   { path: '/Profile/:tg_id', element: <Profile /> },
   { path: '/Profile', element: <Profile /> },
   { path: '/Messages/:tg_id', element: <Messages /> },
@@ -30,8 +31,8 @@ const router = createBrowserRouter([
   { path: '/Create', element: <Create /> },
   { path: '/Favorites/:tg_id', element: <Favorites /> },
   { path: '/Favorites', element: <Favorites /> },
-  { path: '/Auth/:tg_id', element: <Profile /> },
-  { path: '/Auth', element: <Profile /> },
+  //{ path: "/Auth/:tg_id", element: <Profile /> },
+  //{ path: "/Auth", element: <Profile /> },
   //  { path: '/Regist', element: <Regist /> },
   //  { path: '/Registration', element: <Registration /> },
   { path: '/product/:tg_id/:id', element: <ProductPage /> },

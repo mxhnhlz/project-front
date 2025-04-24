@@ -53,7 +53,7 @@ function Main() {
   }, [])
 
   useEffect(() => {
-    reloadItems() // Загружаем первую партию товаров
+    reloadItems()
   }, [reloadItems])
 
   const handleRentButtonClick = (index) => {
