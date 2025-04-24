@@ -53,16 +53,16 @@ function Main() {
   }, [])
 
   useEffect(() => {
-    reloadItems()
+    reloadItems() // Загружаем первую партию товаров
   }, [reloadItems])
 
-  const handleRentButtonClick = (index) => {
-    setOpenCalendar(openCalendar === index ? null : index)
-  }
+  // const handleRentButtonClick = (index) => {
+  //   setOpenCalendar(openCalendar === index ? null : index);
+  // };
 
-  const handleCloseCalendar = () => {
-    setOpenCalendar(null)
-  }
+  // const handleCloseCalendar = () => {
+  //   setOpenCalendar(null);
+  // };
 
   const handleProductClick = (product) => {
     navigate(`/product/${userId}/${product.id}`, { state: { product } })
@@ -120,23 +120,23 @@ function Main() {
                 </div>
                 <div className={styles.productStats}>
                   <span className={styles.productPrice}>{product.price} ₽</span>
-                  <Button
+                  {/* <Button
                     className={styles.rentButton}
-                    variant='outlined'
+                    variant="outlined"
                     sx={{
-                      borderRadius: '12px',
-                      borderColor: '#006FFD',
-                      color: '#006FFD',
-                      padding: '8px 16px',
-                      '&:hover': {
-                        backgroundColor: '#006FFD',
-                        color: 'white',
+                      borderRadius: "12px",
+                      borderColor: "#006FFD",
+                      color: "#006FFD",
+                      padding: "8px 16px",
+                      "&:hover": {
+                        backgroundColor: "#006FFD",
+                        color: "white",
                       },
                     }}
                     onClick={() => handleRentButtonClick(index)}
                   >
                     Арендовать
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             </div>
@@ -182,7 +182,7 @@ function Main() {
         )}
       </div>
 
-      {/* Модальное окно */}
+      {/* Модальное окно
       {openCalendar !== null && (
         <div className={styles.modalContainer}>
           <div className={styles.cancelButtonContainer}>
@@ -202,7 +202,7 @@ function Main() {
             />
           </div>
         </div>
-      )}
+      )} */}
 
       {/* footer */}
       <Menu tg_id={userId} />

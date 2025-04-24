@@ -18,7 +18,7 @@ import DeleteAccount from './pages/profile/delete/deleteAccount'
 import AboutApp from './pages/profile/about/aboutApp'
 import CurrentRentals from './pages/profile/currentRentals/currentRentals'
 import RentalHistory from './pages/profile/rentalHistory/rentalHistory'
-
+import Offers from './pages/profile/offers/Offers'
 const router = createBrowserRouter([
   { path: '/:tg_id', element: <Main /> },
   { path: '/', element: <Main /> },
@@ -31,15 +31,16 @@ const router = createBrowserRouter([
   { path: '/Create', element: <Create /> },
   { path: '/Favorites/:tg_id', element: <Favorites /> },
   { path: '/Favorites', element: <Favorites /> },
-  //{ path: "/Auth/:tg_id", element: <Profile /> },
-  //{ path: "/Auth", element: <Profile /> },
+  { path: '/Auth/:tg_id', element: <Profile /> },
+  { path: '/Auth', element: <Profile /> },
   //  { path: '/Regist', element: <Regist /> },
   //  { path: '/Registration', element: <Registration /> },
   { path: '/product/:tg_id/:id', element: <ProductPage /> },
-  { path: '/delete-account/:tg_id', element: <DeleteAccount /> },
+  //  { path: "/delete-account/:tg_id", element: <DeleteAccount /> },//второстепенно
   { path: '/about-app/:tg_id', element: <AboutApp /> },
   { path: '/current-rentals/:tg_id', element: <CurrentRentals /> },
   { path: '/rental-history/:tg_id', element: <RentalHistory /> },
+  { path: '/offers/:tg_id/:owner_id', element: <Offers /> },
 ])
 
 const root = ReactDOM.createRoot(document.getElementById('root'))

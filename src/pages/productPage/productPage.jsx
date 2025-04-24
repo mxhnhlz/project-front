@@ -1,49 +1,61 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import db from '../../api/db'
-
-import styles from './productPage.module.css'
-import CustomCarousel from './customSlider'
+import Menu from '../components/menu/Menu'
 import MyCalendar from '../main/calendar/calendar'
+import styles from '../main/main.module.css'
 import { Button } from '@mui/material'
 
-import Rating from '@mui/material/Rating'
-
-function ProductPage() {
+function PproductPage() {
   const { tg_id, id } = useParams()
-  const [offer, setOffer] = useState({})
-  const [isFavorite, setIsFavorite] = useState(false)
+  const userId = tg_id || 0
+  const navigate = useNavigate()
   const [openCalendar, setOpenCalendar] = useState(null)
-
+  const [offer, setOffer] = useState({})
+  const [isFavorite, setIsFavorite] = useState(false) // Состояние для избранного
+  const [ownerId, setOwnerId] = useState(0) // Состояние для избранного
+  const [owner, setOwner] = useState({})
+  const handleCloseCalendar = () => {
+    setOpenCalendar(null)
+  }
   const loadOffer = useCallback(async () => {
     try {
       const data = await db.getOffer(id)
+      setOwnerId(data.tg_id)
       setOffer(data)
     } catch (error) {
-      console.log('Error in ProductPage, loadOffer ', error)
+      console.log('Error in productPage, loadOffer ', error)
     }
   }, [id])
+  const handleRentButtonClick = () => {
+    setOpenCalendar(openCalendar === true ? false : true)
+  }
 
+  const loadOwner = useCallback(async () => {
+    try {
+      const data = await db.getUser(ownerId)
+      setOwner(data)
+    } catch (error) {
+      console.log('Error in productPage, loadOwner ', error)
+    }
+  }, [ownerId])
   const toggleFavorite = async () => {
     try {
-      await db.newFavorite(tg_id, id)
-      setIsFavorite(!isFavorite)
+      await db.newFavorite(tg_id, id) // Вызов API для добавления в избранное
+      setIsFavorite(!isFavorite) // Инвертируем состояние избранного
     } catch (error) {
       console.error('Error toggling favorite:', error)
     }
   }
-
-  const handleOpenCalendar = () => {
-    setOpenCalendar(0)
-  }
-
-  const handleCloseCalendar = () => {
-    setOpenCalendar(null)
+  const handleGoToOtherProfile = () => {
+    navigate(`/profile/${tg_id}/${ownerId}`)
   }
 
   useEffect(() => {
     loadOffer()
-  }, [loadOffer])
+    loadOwner()
+  }, [loadOffer, loadOwner])
+
   return (
     <div className={styles.main}>
       {/* Хедер */}
@@ -55,77 +67,42 @@ function ProductPage() {
           <h1>✕</h1>
         </button>
       </div>
-
       {/* Карусель */}
       {offer && offer.images && offer.images.length > 0 ? (
-        <CustomCarousel>
-          {offer.images.map((img, index) => (
-            <img
-              key={index}
-              src={`${process.env.REACT_APP_API_IMAGE_URL}${img}`}
-              style={{ width: '100%', height: '300px', objectFit: 'cover' }}
-              alt={`offer-${index}`}
-            />
-          ))}
-        </CustomCarousel>
+        <img
+          src={`${process.env.REACT_APP_API_IMAGE_URL}${offer.images[0]}`}
+          style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+          alt={offer.title}
+        />
       ) : (
         <div />
       )}
-
-      {/* Контент */}
-      <div className={styles.content}>
-        {/* Информация о товаре */}
-        <div className={styles.productInfo}>
-          <h2 className={styles.title}>{offer.title}</h2>
-          <p className={styles.city}>{offer.city}</p>
-          <p className={styles.price}>{offer.price} ₽ / день</p>
-        </div>
-
-        {/* Избранное */}
-        {/* <button onClick={toggleFavorite} className={styles.favoriteButton}>
-          {isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
-        </button> */}
-
-        {/* Арендодатель */}
-        <div className={styles.ownerSection}>
-          <img
-            src={offer.owner?.avatar || '/default-avatar.png'}
-            alt='owner'
-            className={styles.ownerAvatar}
-          />
-          <div className={styles.ownerInfo}>
-            <p className={styles.ownerName}>{offer.owner?.name}</p>
-            <Rating value={offer.owner?.rating || 0} precision={0.5} readOnly />
-          </div>
-          <button className={styles.contactButton}>Написать</button>
-        </div>
-
-        {/* Описание */}
-        <div className={styles.descriptionBlock}>
-          <h3>Описание</h3>
-          <p>{offer.description}</p>
-        </div>
-
-        {/* Кнопка "Выбрать даты" */}
-        <Button
-          className={styles.rentButton}
-          variant='outlined'
-          sx={{
-            borderRadius: '12px',
-            borderColor: '#006FFD',
-            color: '#006FFD',
-            padding: '8px 16px',
-            '&:hover': {
-              backgroundColor: '#006FFD',
-              color: 'white',
-            },
-          }}
-          onClick={handleOpenCalendar}
-        >
-          Выбрать даты
-        </Button>
-      </div>
-
+      P{offer ? `${JSON.stringify(offer)}` : ''}
+      <button onClick={toggleFavorite}>
+        {isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
+      </button>
+      {tg_id !== ownerId && (
+        <button onClick={handleGoToOtherProfile}>
+          Перейти в профиль пользователя
+        </button>
+      )}
+      <Button
+        className={styles.rentButton}
+        variant='outlined'
+        sx={{
+          borderRadius: '12px',
+          borderColor: '#006FFD',
+          color: '#006FFD',
+          padding: '8px 16px',
+          '&:hover': {
+            backgroundColor: '#006FFD',
+            color: 'white',
+          },
+        }}
+        onClick={() => handleRentButtonClick()}
+      >
+        Арендовать
+      </Button>
       {/* Модальное окно */}
       {openCalendar !== null && (
         <div className={styles.modalContainer}>
@@ -141,14 +118,15 @@ function ProductPage() {
             <MyCalendar
               openCalendar={openCalendar}
               handleCloseCalendar={handleCloseCalendar}
-              userId={offer.owner?.id}
+              userId={userId}
               offer={offer}
             />
           </div>
         </div>
       )}
+      <Menu tg_id={tg_id}></Menu>
     </div>
   )
 }
 
-export default ProductPage
+export default PproductPage

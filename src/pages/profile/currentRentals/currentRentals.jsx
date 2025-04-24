@@ -1,61 +1,49 @@
-import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
-import Menu from '../../components/menu/Menu'
-import styles from './currentRentals.module.css'
-import { Button } from '@mui/material'
-import SearchIcon from '../../components/icons/SearchIcon'
-import CartButton from '../../components/icons/cartButton'
-function CurrentRentals() {
-  const { tg_id } = useParams()
-  const userId = tg_id || 0
-  const mockRents = [
-    {
-      title: 'Электросамокат Xiaomi',
-      info: 'Мощный самокат с дальностью до 30 км',
-      images: ['scooter.jpg'],
-      price: 1200,
-      rentedOn: '2025-04-01', // дата аренды
-      rentalEnds: '2025-04-10', // дата окончания аренды
-    },
-    {
-      title: 'Велосипед Trek',
-      info: 'Универсальный горный велосипед',
-      images: ['./images/voidimg.png'],
-      price: 900,
-      rentedOn: '2025-04-03',
-      rentalEnds: '2025-04-12',
-    },
-    {
-      title: 'Гироскутер Smart Balance',
-      info: 'Подходит для детей и подростков',
-      images: ['hoverboard.jpg'],
-      price: 700,
-      rentedOn: '2025-04-05',
-      rentalEnds: '2025-04-15',
-    },
-  ]
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import Menu from "../../components/menu/Menu";
+import styles from "./currentRentals.module.css";
+import { Button } from "@mui/material";
+import SearchIcon from "../../components/icons/SearchIcon";
+import CartButton from "../../components/icons/cartButton";
+import db from "../../../api/db";
 
-  const [searchQuery, setSearchQuery] = useState('')
+function CurrentRentals() {
+  const { tg_id } = useParams();
+  const userId = tg_id || 0;
+  const [rents, setRents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const fetchRents = async () => {
+      try {
+        const response = await db.getAllRents(userId);
+        setRents(response.currentRents);
+      } catch (error) {
+        console.error("Ошибка при получении аренд:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRents();
+  }, [userId]);
 
   const handleProductClick = (product) => {
-    console.log('Выбран продукт:', product)
-  }
+    console.log("Выбран продукт:", product);
+  };
 
-  const handleRentButtonClick = (index) => {
-    console.log(`Аренда товара №${index + 1}`)
-  }
   return (
     <div className={styles.main}>
       <div className={styles.searchCartWrapper}>
-        {/* search */}
         <div className={styles.searchContainer}>
           <div className={styles.searchWrapper}>
             <button className={styles.searchIcon}>
               <SearchIcon />
             </button>
             <input
-              type='text'
-              placeholder='Поиск по каталогу'
+              type="text"
+              placeholder="Поиск по каталогу"
               className={styles.search}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -66,58 +54,82 @@ function CurrentRentals() {
           </button>
         </div>
       </div>
-      {/* Текущие аренды пользователя с ID: {tg_id} */}
       <div className={styles.products}>
-        {mockRents
-          .filter((product) =>
-            product.title.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-          .map((product, index) => (
-            <div className={styles.productContainer} key={index}>
-              <div
-                className={styles.productImg}
-                onClick={() => handleProductClick(product)}
-              >
-                <img src={product.images[0]} alt='арендуемый товар' />
-              </div>
-              <div className={styles.productInfo}>
-                <div className={styles.productName}>
-                  <h1>{product.title}</h1>
-                  <p className={styles.productRent}>
-                    Арендовано:{' '}
-                    <span className={styles.green}>{product.rentedOn}</span>
-                  </p>
-                  <p className={styles.productRent}>
-                    Аренда закончится:{' '}
-                    <span className={styles.red}>{product.rentalEnds}</span>
-                  </p>
+        {loading ? (
+          <div className={styles.main}>Загрузка...</div>
+        ) : rents.length === 0 ? (
+          <div className={styles.main}>Пусто...</div>
+        ) : (
+          rents
+            .filter((rent) =>
+              rent.title.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((rent, index) => (
+              <div className={styles.productContainer} key={index}>
+                <div
+                  className={styles.productImg}
+                  onClick={() => handleProductClick(rent)}
+                >
+                  <img
+                    src={
+                      `${process.env.REACT_APP_API_IMAGE_URL}${rent.images[0]}` ||
+                      "./images/voidimg.png"
+                    }
+                    alt="арендуемый товар"
+                  />
                 </div>
-                <div className={styles.productStats}>
-                  <Button
-                    className={styles.rentButton}
-                    variant='outlined'
-                    sx={{
-                      borderRadius: '12px',
-                      borderColor: '#006FFD',
-                      color: '#006FFD',
-                      padding: '8px 16px',
-                      '&:hover': {
-                        backgroundColor: '#006FFD',
-                        color: 'white',
-                      },
-                    }}
-                    onClick={() => handleRentButtonClick(index)}
-                  >
-                    Связь с арендодателем
-                  </Button>
+                <div className={styles.productInfo}>
+                  <div className={styles.productName}>
+                    <h1>{rent.title}</h1>
+                    <p className={styles.productRent}>
+                      {rent.user_id === userId
+                        ? "Арендовано у"
+                        : "Арендовано у вас"}
+                    </p>
+                    <p className={styles.productRent}>
+                      Начало:{" "}
+                      <span className={styles.green}>
+                        {" "}
+                        {new Date(rent.start_date).toLocaleDateString("ru-RU")}
+                      </span>
+                    </p>
+                    <p className={styles.productRent}>
+                      Конец:{" "}
+                      <span className={styles.red}>
+                        {" "}
+                        {new Date(rent.end_date).toLocaleDateString("ru-RU")}
+                      </span>
+                    </p>
+                  </div>
+                  <div className={styles.productStats}>
+                    <Button
+                      className={styles.rentButton}
+                      href={`https://telegram.me/${rent.tg_name}`}
+                      variant="outlined"
+                      sx={{
+                        borderRadius: "12px",
+                        borderColor: "#006FFD",
+                        color: "#006FFD",
+                        padding: "8px 16px",
+                        "&:hover": {
+                          backgroundColor: "#006FFD",
+                          color: "white",
+                        },
+                      }}
+                    >
+                      {rent.user_id === userId
+                        ? "Связь с арендодателем"
+                        : "Связь с арендатором"}
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+        )}
       </div>
       <Menu tg_id={userId} />
     </div>
-  )
+  );
 }
 
-export default CurrentRentals
+export default CurrentRentals;

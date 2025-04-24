@@ -1,42 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
-import styles from "../../pages/main/main.module.css";
-import SearchIcon from "../../pages/components/icons/SearchIcon";
-import CartButton from "../../pages/components/icons/cartButton";
-import Menu from "../components/menu/Menu";
-import db from "../../api/db";
+import styles from "../../main/main.module.css";
+import SearchIcon from "../../components/icons/SearchIcon";
+import CartButton from "../../components/icons/cartButton";
+import Menu from "../../components/menu/Menu";
+import db from "../../../api/db";
 
-function Favorites() {
-  const { tg_id } = useParams();
+function Offers() {
+  const { tg_id, owner_id } = useParams();
   const navigate = useNavigate();
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const loadOffers = async () => {
-    try {
-      const data = await db.getFavorite(tg_id || 0);
-      setOffers(data);
-    } catch (error) {
-      console.error("Error loading offers:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    loadOffers();
-  }, [tg_id]);
+    const fetchOffers = async () => {
+      try {
+        const data = await db.getAllOffers(owner_id);
+        setOffers(data);
+      } catch (error) {
+        console.error("Ошибка при получении объявлений:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const removeFromFavorites = async (offerId) => {
-    try {
-      await db.deleteFavorite(tg_id, offerId);
-      loadOffers(); // Обновляем список после удаления
-    } catch (error) {
-      console.error("Error removing from favorites:", error);
-    }
-  };
+    fetchOffers();
+  }, [owner_id]);
 
   const handleProductClick = (offer) => {
     navigate(`/product/${tg_id}/${offer.id}`, { state: { product: offer } });
@@ -52,7 +43,7 @@ function Favorites() {
             </button>
             <input
               type="text"
-              placeholder="Поиск по избранному"
+              placeholder="Поиск по каталогу"
               className={styles.search}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -67,7 +58,7 @@ function Favorites() {
       <div className={styles.products}>
         {offers.length === 0 ? (
           <div className={styles.emptyMessage}>
-            <p>Нет избранных объявлений</p>
+            <p>Нет доступных объявлений</p>
           </div>
         ) : loading ? (
           <div className={styles.main}>Загрузка...</div>
@@ -105,20 +96,16 @@ function Favorites() {
                       variant="outlined"
                       sx={{
                         borderRadius: "12px",
-                        borderColor: "#FF3B30",
-                        color: "#FF3B30",
+                        borderColor: "#006FFD",
+                        color: "#006FFD",
                         padding: "8px 16px",
                         "&:hover": {
-                          backgroundColor: "#FF3B30",
+                          backgroundColor: "#006FFD",
                           color: "white",
                         },
                       }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeFromFavorites(offer.favorite_id || offer.id);
-                      }}
                     >
-                      Убрать
+                      Подробнее
                     </Button>
                   </div>
                 </div>
@@ -131,4 +118,4 @@ function Favorites() {
   );
 }
 
-export default Favorites;
+export default Offers;
