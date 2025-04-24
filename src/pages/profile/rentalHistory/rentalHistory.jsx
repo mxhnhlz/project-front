@@ -91,10 +91,15 @@ function RentalHistory() {
                     </p>
                     <p className={styles.productRent}>
                       Начало:{" "}
-                      <span className={styles.green}>{rent.start_date}</span>
+                      <span className={styles.green}>
+                        {new Date(rent.start_date).toLocaleDateString("ru-RU")}
+                      </span>
                     </p>
                     <p className={styles.productRent}>
-                      Конец: <span className={styles.red}>{rent.end_date}</span>
+                      Конец:{" "}
+                      <span className={styles.red}>
+                        {new Date(rent.end_date).toLocaleDateString("ru-RU")}
+                      </span>
                     </p>
                   </div>
                   <div className={styles.productStats}>

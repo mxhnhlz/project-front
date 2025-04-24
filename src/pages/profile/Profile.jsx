@@ -20,6 +20,7 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [avg, setAvg] = useState(0.0);
   const [isOwner, setIsOwner] = useState(true); // Проверка, владелец ли
+  const [isRelated, setIsRelated] = useState(false);
   useEffect(() => {
     const fetchInitialData = async () => {
       setLoading(true);
@@ -27,6 +28,10 @@ function Profile() {
         const userData = await db.getUser(profileId);
         setUser(userData);
         setIsOwner(userId === profileId);
+        if (userId !== profileId) {
+          const relateData = await db.isUsersRelated(profileId, userId);
+          setIsRelated(relateData);
+        }
         // Получаем рейтинг, который уже поставил текущий юзер этому профилю
       } catch (error) {
         console.error("Ошибка при получении данных пользователя:", error);
@@ -134,7 +139,7 @@ function Profile() {
               {declOfNum(user.rating_count, ["оценка", "оценки", "оценок"])})
             </>
             {/* Rating component */}
-            {!isOwner && (
+            {!isOwner && isRelated && (
               <Rating
                 userId={userId}
                 profileId={profileId}

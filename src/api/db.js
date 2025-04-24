@@ -211,7 +211,27 @@ class db {
       throw error;
     }
   }
+  async isUsersRelated(user1, user2) {
+    try {
+      const url = `${process.env.REACT_APP_API_BASE_URL}isUsersRelated?user1=${user1}&user2=${user2}`;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.isRelated; // Возвращает true/false
+    } catch (error) {
+      console.error("Error in isUsersRelated:", error);
+      throw error;
+    }
+  }
   async getFavorite(tg_id) {
     try {
       const response = await fetch(

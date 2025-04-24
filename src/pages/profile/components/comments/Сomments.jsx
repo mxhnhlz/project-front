@@ -9,8 +9,9 @@ function Comments({ userId, currentUserId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newCommentText, setNewCommentText] = useState("");
-  const [isOwner, setIsOwner] = useState(userId === currentUserId);
   const [showCommentForm, setShowCommentForm] = useState(false);
+  const [isRelated, setIsRelated] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,6 +19,10 @@ function Comments({ userId, currentUserId }) {
       setLoading(true);
       setError(null);
       try {
+        if (userId !== currentUserId) {
+          const relateData = await db.isUsersRelated(currentUserId, userId);
+          setIsRelated(relateData);
+        }
         const fetchedComments = await db.getCommentsByReceiver(userId);
         const sortedComments = fetchedComments.sort((a, b) => {
           if ((a.giver.id === currentUserId) ^ (b.giver.id === currentUserId)) {
@@ -68,7 +73,7 @@ function Comments({ userId, currentUserId }) {
       <div className={styles.commentsHeader}>
         <h3 className={styles.commentsTitle}>Отзывы</h3>
 
-        {!isOwner && !showCommentForm && (
+        {isRelated && !showCommentForm && (
           <button
             className={styles.addCommentButton}
             onClick={() => setShowCommentForm(true)}
@@ -77,7 +82,7 @@ function Comments({ userId, currentUserId }) {
           </button>
         )}
       </div>
-      {!isOwner && showCommentForm && (
+      {isRelated && showCommentForm && (
         <form onSubmit={handleCommentSubmit} className={styles.commentForm}>
           <textarea
             className={styles.commentInput}
