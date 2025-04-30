@@ -49,9 +49,6 @@ function Offers() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <button className={styles.cartButton}>
-            <CartButton />
-          </button>
         </div>
       </div>
 

@@ -36,11 +36,17 @@ class db {
       url.searchParams.append("limit", limit.toString());
 
       // Add search and filters
-      if (search) url.searchParams.append("search", search);
+      //if (search) url.searchParams.append("search", search);
       if (filters.minPrice)
-        url.searchParams.append("minPrice", filters.minPrice);
+        url.searchParams.append(
+          "minPrice",
+          filters.minPrice < 1 ? 1 : filters.minPrice
+        );
       if (filters.maxPrice)
-        url.searchParams.append("maxPrice", filters.maxPrice);
+        url.searchParams.append(
+          "maxPrice",
+          filters.maxPrice < 1 ? 1 : filters.maxPrice
+        );
       if (filters.sortBy) url.searchParams.append("sortBy", filters.sortBy);
 
       const response = await fetch(url);
