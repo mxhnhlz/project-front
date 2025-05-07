@@ -104,3 +104,26 @@ p {
   font-family: 'Inter', serif;
   line-height: 1.125em;
 }
+
+.infoText {
+  font-size: 25px; /* Размер шрифта */
+}
+
+.infoBlockWithHeart {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.textInfo {
+  flex: 1;
+}
+
+.heartButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}

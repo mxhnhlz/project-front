@@ -143,44 +143,41 @@ p {
   cursor: pointer;
   color: #333;
 }
-
-/* Первый инпут (жирный текст, размер шрифта 25px, черный цвет текста) */
 .input1 {
-  background-color: transparent; /* Прозрачный фон */
+  background-color: transparent;
   padding: 10px;
-  border-radius: 5px;
-  color: #000000 !important; /* Черный цвет текста с приоритетом */
-  font-size: 25px; /* Размер шрифта */
-  font-weight: bold; /* Жирный текст */
-  outline: none; /* Убираем стандартное выделение */
-  border: none; /* Почти невидимый бордер */
+  border-radius: 12px;
+  color: #000000 !important;
+  font-size: 14px;
+  font-weight: bold;
+  outline: none;
+  border: 1px solid #ccc;
+  width: 50%;
 }
 
-/* Второй инпут (без жирности, размер шрифта 25px, черный цвет текста) */
 .input2 {
-  background-color: transparent; /* Прозрачный фон */
+  background-color: transparent;
   padding: 10px;
-  border-radius: 5px;
-  color: #000000 !important; /* Черный цвет текста с приоритетом */
-  font-size: 25px; /* Размер шрифта */
-  font-weight: normal; /* Без жирного текста */
-  outline: none; /* Убираем стандартное выделение */
-  border: none; /* Почти невидимый бордер */
+  border-radius: 12px;
+  color: #000000 !important;
+  font-size: 14px;
+  font-weight: normal;
+  outline: none;
+  border: 1px solid #ccc;
 }
 
-/* Для третьего инпута и textarea — серый цвет текста */
 .input3,
 .textarea {
-  background-color: transparent; /* Прозрачный фон */
+  background-color: transparent;
   padding: 10px;
-  border-radius: 5px;
-  color: #808080; /* Серый цвет текста */
-  font-size: 12px; /* Размер шрифта */
-  outline: none; /* Убираем стандартное выделение */
-  border: 1px solid rgba(0, 0, 0, 0.1); /* Почти невидимый бордер */
+  border-radius: 12px;
+  color: #808080;
+  font-size: 14px;
+  outline: none;
+  border: 1px solid #ccc;
 }
 
 .textarea {
-  resize: none; /* Убираем возможность изменения размера */
+  resize: none;
   min-height: 80px;
 }

@@ -19,6 +19,8 @@ import AboutApp from './pages/profile/about/aboutApp'
 import CurrentRentals from './pages/profile/currentRentals/currentRentals'
 import RentalHistory from './pages/profile/rentalHistory/rentalHistory'
 import Offers from './pages/profile/offers/Offers'
+import ProductMock from './pages/productPage/productMock'
+
 const router = createBrowserRouter([
   { path: '/:tg_id', element: <Main /> },
   { path: '/', element: <Main /> },
@@ -41,6 +43,7 @@ const router = createBrowserRouter([
   { path: '/current-rentals/:tg_id', element: <CurrentRentals /> },
   { path: '/rental-history/:tg_id', element: <RentalHistory /> },
   { path: '/offers/:tg_id/:owner_id', element: <Offers /> },
+  { path: '/productmock/:tg_id/:id', element: <ProductMock /> },
 ])
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
