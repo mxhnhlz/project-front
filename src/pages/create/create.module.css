@@ -1,5 +1,5 @@
 .main {
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
   margin: 0;
   padding: 0;
   min-height: 100dvh;
@@ -43,7 +43,7 @@ p {
 }
 
 .imageLabel {
-  width: 100%;
+  width: 80%;
   border: 2px dashed #ccc;
   display: flex;
   align-items: center;
@@ -180,4 +180,138 @@ p {
 .textarea {
   resize: none;
   min-height: 80px;
+}
+
+.mainImageContainer {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin-bottom: 10px;
+}
+
+.mainPreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.secondaryImages {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.secondaryImageContainer {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.secondaryPreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.removeImageButton {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 4;
+  padding: 0;
+}
+
+.priceInputContainer {
+  position: relative;
+
+  width: 100%;
+}
+
+.currencySymbol {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #000;
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+.button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.bigImageLabel {
+  position: relative; /* Чтобы imageOverlay позиционировался относительно label */
+  width: 100%;
+  height: 50vh;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #f0f0f0; /* Цвет фона, когда нет картинки */
+  overflow: hidden; /* Обрезаем контент, выходящий за границы label */
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3); /* Затемнение */
+  border-radius: 8px;
+}
+
+.bigPreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  filter: brightness(0.5); /* Уменьшаем яркость в два раза */
+}
+
+.bigPlus {
+  font-size: 48px;
+  color: #fff; /* Делаем плюс белым, чтобы лучше было видно на фоне */
+  z-index: 1; /* Поверх изображения и затемнения */
+  position: absolute; /* Центрируем абсолютно */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none; /* Предотвращаем перехват событий мыши (чтобы клик был по инпуту) */
+}
+
+.imageLimit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  z-index: 2; /* Поверх изображения */
+  pointer-events: none; /* Предотвращаем перехват событий мыши */
 }

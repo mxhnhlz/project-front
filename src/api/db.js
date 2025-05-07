@@ -16,16 +16,39 @@ class db {
       throw error;
     }
   }
+
   // =========================================
   // Items
   // =========================================
-  async getItems(tg_id = 0, lastItemId = 0, limit = 10) {
+  async getItems(
+    tg_id = 0,
+    lastItemId = 0,
+    limit = 10,
+    search = "",
+    filters = {}
+  ) {
     try {
       const url = new URL(`${process.env.REACT_APP_API_BASE_URL}getOfferList`);
-      // Добавляем параметры запроса
+
+      // Add base params
       url.searchParams.append("tg_id", tg_id.toString());
       url.searchParams.append("lastItemId", lastItemId.toString());
       url.searchParams.append("limit", limit.toString());
+
+      // Add search and filters
+      //if (search) url.searchParams.append("search", search);
+      if (filters.minPrice)
+        url.searchParams.append(
+          "minPrice",
+          filters.minPrice < 1 ? 1 : filters.minPrice
+        );
+      if (filters.maxPrice)
+        url.searchParams.append(
+          "maxPrice",
+          filters.maxPrice < 1 ? 1 : filters.maxPrice
+        );
+      if (filters.sortBy) url.searchParams.append("sortBy", filters.sortBy);
+
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(
@@ -33,8 +56,7 @@ class db {
         );
       }
 
-      const data = await response.json();
-      return data;
+      return await response.json();
     } catch (error) {
       console.error("Ошибка при получении товаров:", error);
       throw error;
@@ -586,6 +608,53 @@ class db {
 
   async createOfferWithImages(tg_id, title, info, price, imageFiles) {
     try {
+      let createdOffer;
+      const imageUrls = [];
+
+      // 2. Загружаем картинки (если есть)
+      if (imageFiles && imageFiles.length > 0) {
+        for (const imageFile of imageFiles) {
+          const dataUrl = await resizeAndCompressImage(
+            imageFile,
+            1920,
+            1920,
+            0.7
+          ); // Задаем максимальные размеры и качество
+
+          // 3. Формируем имя файла и загружаем сжатое изображение
+          const fileName = imageFile.name;
+          const fileExtension = fileName.split(".").pop();
+          const timestamp = Date.now();
+          const newFileName = `${timestamp}-${tg_id}.${fileExtension}`;
+          const formData = new FormData();
+          imageUrls.push(newFileName); // Добавляем URL в массив
+          // Преобразуем Data URL в Blob (важно для отправки)
+          const blob = dataURItoBlob(dataUrl);
+          formData.append("image", blob, newFileName); // Отправляем сжатый Blob
+          const uploadResponse = await fetch(
+            `${process.env.REACT_APP_API_BASE_URL}uploadImage`,
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+
+          if (!uploadResponse.ok) {
+            if (uploadResponse.status === 413) {
+              console.error("Ошибка загрузки: Размер файла слишком большой.");
+              alert(
+                "Размер файла слишком большой. Максимальный размер: 0.8MB."
+              );
+              return;
+            }
+            throw new Error(`Upload failed: ${uploadResponse.status}`);
+          }
+
+          const data = await uploadResponse.json();
+          console.log("File uploaded successfully:", data);
+          // ... Дальнейшая обработка успешной загрузки
+        }
+      }
       // 1. Создаём оффер
       const offerData = {
         tg_id: tg_id,
@@ -611,64 +680,31 @@ class db {
         );
       }
 
-      const createdOffer = await createOfferResponse.json();
+      createdOffer = await createOfferResponse.json();
       const offerId = createdOffer.id; // Получаем ID созданного оффера
-      const imageUrls = [];
-
-      // 2. Загружаем картинки (если есть)
-      if (imageFiles && imageFiles.length > 0) {
-        for (const imageFile of imageFiles) {
-          const fileName = imageFile.name;
-          const fileExtension = fileName.split(".").pop(); // Получаем расширение файла
-          const timestamp = Date.now();
-          const newFileName = `${timestamp}-${tg_id}.${fileExtension}`; // Формируем новое имя файла
-
-          const formData = new FormData();
-          formData.append("image", imageFile, newFileName);
-
-          const uploadResponse = await fetch(
-            `${process.env.REACT_APP_API_BASE_URL}uploadImage`,
-            {
-              // Используем тот же API endpoint
-              method: "POST",
-              body: formData,
-            }
-          );
-
-          if (!uploadResponse.ok) {
-            const errorText = await uploadResponse.text();
-            throw new Error(
-              `Failed to upload image: ${uploadResponse.status} - ${errorText}`
-            );
+      // 3. Обновляем оффер с ссылками на картинки
+      if (imageUrls.length > 0) {
+        const updateImagesResponse = await fetch(
+          `${process.env.REACT_APP_API_BASE_URL}updateOfferImages`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: offerId,
+              images: imageUrls,
+            }),
           }
+        );
 
-          const uploadResult = await uploadResponse.json(); // Получаем результат загрузки (URL)
-          imageUrls.push(uploadResult.imageUrl); // Добавляем URL в массив
-        }
-        // 3. Обновляем оффер с ссылками на картинки
-        if (imageUrls.length > 0) {
-          const updateImagesResponse = await fetch(
-            `${process.env.REACT_APP_API_BASE_URL}uploadOfferImages`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                id: offerId,
-                images: imageUrls,
-              }),
-            }
+        if (!updateImagesResponse.ok) {
+          const errorText = await updateImagesResponse.text();
+          throw new Error(
+            `Failed to update offer images: ${updateImagesResponse.status} - ${errorText}`
           );
-
-          if (!updateImagesResponse.ok) {
-            const errorText = await updateImagesResponse.text();
-            throw new Error(
-              `Failed to update offer images: ${updateImagesResponse.status} - ${errorText}`
-            );
-          }
-          const updatedOffer = await updateImagesResponse.json();
         }
+        const updatedOffer = await updateImagesResponse.json();
       }
 
       return createdOffer; // Возвращаем созданный оффер (с ID)
@@ -679,4 +715,64 @@ class db {
   }
 }
 
+async function resizeAndCompressImage(
+  file,
+  maxWidth,
+  maxHeight,
+  quality = 0.7
+) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+
+        // Рассчитываем новые размеры с сохранением пропорций
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height);
+          width = width * ratio;
+          height = height * ratio;
+        }
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          // Проверяем, что контекст получен
+          ctx.drawImage(img, 0, 0, width, height);
+          try {
+            const dataUrl = canvas.toDataURL("image/jpeg", quality); //  image/jpeg, image/webp, и т.д.
+            resolve(dataUrl);
+          } catch (error) {
+            reject(error);
+          }
+        } else {
+          reject(new Error("Could not get 2D context"));
+        }
+      };
+      img.onerror = (error) => {
+        reject(error);
+      };
+      img.src = event.target.result; // event.target.result содержит data URL
+    };
+    reader.onerror = (error) => {
+      reject(error);
+    };
+    reader.readAsDataURL(file); //  Важно: читаем как Data URL
+  });
+}
+function dataURItoBlob(dataURI) {
+  const byteString = atob(dataURI.split(",")[1]);
+  const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([ab], { type: mimeString });
+}
 module.exports = new db();
