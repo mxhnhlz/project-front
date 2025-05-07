@@ -74,6 +74,7 @@ function ProductPage() {
       </div>
 
       {/* Карусель в content */}
+
       <div className={styles.content}>
         {offer && offer.images && offer.images.length > 0 ? (
           <CustomCarousel>

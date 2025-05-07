@@ -1,5 +1,5 @@
 .main {
-  font-family: "Inter", serif;
+  font-family: 'Inter', serif;
   margin: 0;
   padding: 0;
   min-height: 100dvh;
@@ -20,6 +20,7 @@ p {
   align-items: center;
   width: 100%;
   flex-grow: 1;
+  background-color: #ffffff;
 }
 
 .products {

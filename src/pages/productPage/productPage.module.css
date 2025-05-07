@@ -106,24 +106,127 @@ p {
 }
 
 .infoText {
+  font-weight: 400;
   font-size: 25px; /* Размер шрифта */
+  margin: 0; /* Убираем внешний отступ */
+  padding: 0; /* Убираем внутренний отступ */
+  line-height: 1.7;
 }
 
 .infoBlockWithHeart {
+  width: 87%;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-  width: 100%;
+}
+.infoBlockWithHeart > * {
+  padding: 5px;
 }
 
 .textInfo {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+
+  font-size: 25px;
 }
 
 .heartButton {
+  align-self: flex-start;
   background: none;
   border: none;
-  padding: 0;
+  padding: 10px;
   cursor: pointer;
+}
+
+strong {
+  font-weight: bold;
+}
+
+/* .infoBlockWithHeart {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
+  width: 100%;
+  margin-bottom: 10px; 
+} */
+
+.landlordContainer {
+  width: 87%;
+  margin: 15px auto;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background-color: #eeeeee31; */
+  border-radius: 12px;
+}
+
+.landlordPhoto {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.landlordInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 16px;
+  flex: 1;
+  margin-left: 10px;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.landlordName {
+  margin: 0;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.contactButton {
+  padding: 8px 12px;
+  background-color: #ffffff;
+  color: #006ffd;
+  border-color: #006ffd;
+
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-right: 10px;
+  text-transform: none;
+  width: 30%;
+}
+
+.arrowButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}
+
+.descriptionBlock {
+  width: 87%;
+  margin-bottom: 20px;
+}
+
+.descriptionText {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 1%;
+  color: #71727a;
+  margin: 0;
+  text-align: justify;
+  white-space: normal; /* Позволяет тексту переноситься на несколько строк */
+  word-wrap: break-word; /* Перенос длинных слов */
+  overflow-wrap: break-word; /* Для предотвращения переполнения контейнера длинными словами */
+}
+
+.rentButton {
+  width: 87%;
 }

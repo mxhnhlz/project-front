@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useSwipeable } from 'react-swipeable'
 
 import './customSlider.css'
 
@@ -7,17 +8,17 @@ function CustomCarousel({ children }) {
   const [slideDone, setSlideDone] = useState(true)
   const [timeID, setTimeID] = useState(null)
 
-  useEffect(() => {
-    if (slideDone) {
-      setSlideDone(false)
-      setTimeID(
-        setTimeout(() => {
-          slideNext()
-          setSlideDone(true)
-        }, 5000)
-      )
-    }
-  }, [slideDone])
+  // useEffect(() => {
+  //   if (slideDone) {
+  //     setSlideDone(false)
+  //     setTimeID(
+  //       setTimeout(() => {
+  //         slideNext()
+  //         setSlideDone(true)
+  //       }, 5000)
+  //     )
+  //   }
+  // }, [slideDone])
 
   const slideNext = () => {
     setActiveIndex((val) => {
@@ -51,12 +52,19 @@ function CustomCarousel({ children }) {
       setSlideDone(true)
     }
   }
+  const handlers = useSwipeable({
+    onSwipedLeft: () => slideNext(),
+    onSwipedRight: () => slidePrev(),
+    preventDefaultTouchmoveEvent: true,
+    trackTouch: true,
+  })
 
   return (
     <div
       className='container__slider'
       onMouseEnter={AutoPlayStop}
       onMouseLeave={AutoPlayStart}
+      {...handlers}
     >
       {children.map((item, index) => {
         return (
