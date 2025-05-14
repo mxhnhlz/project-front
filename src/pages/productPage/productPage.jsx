@@ -49,6 +49,7 @@ function ProductPage() {
 
   const toggleFavorite = async () => {
     try {
+      console.log(isFavorite);
       isFavorite
         ? await db.deleteFavorite(tg_id, id)
         : await db.newFavorite(tg_id, id);

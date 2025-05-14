@@ -297,12 +297,13 @@ class db {
 
   async deleteFavorite(tg_id, id) {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}deleteFavorite/${id}`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}deleteFavorite`;
       const response = await fetch(url, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ tg_id: tg_id, id: id }),
       });
 
       if (!response.ok) {

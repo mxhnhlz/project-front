@@ -115,7 +115,7 @@ function Favorites() {
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        removeFromFavorites(offer.favorite_id || offer.id);
+                        removeFromFavorites(offer.id);
                       }}
                     >
                       Убрать
