@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 .main {
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
   margin: 0;
   padding: 0;
   min-height: 100dvh;
@@ -92,7 +92,7 @@
   height: 40px;
   font-size: 14px;
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .searchIcon {
@@ -168,7 +168,7 @@
 
   overflow: hidden;
   text-overflow: ellipsis;
-
+  text-align: left;
   font-size: 13px;
   line-height: 1.4;
   max-height: calc(1.4em * 2);
@@ -261,7 +261,7 @@
 .cal {
   background: white;
   border: 0px solid #a0a096;
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
   line-height: 1.125em;
 }
 

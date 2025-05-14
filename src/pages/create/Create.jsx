@@ -1,55 +1,55 @@
-import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
-import Menu from '../components/menu/Menu'
-import styles from './create.module.css'
-import db from '../../api/db'
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import Menu from "../components/menu/Menu";
+import styles from "./create.module.css";
+import db from "../../api/db";
 
 const Create = () => {
-  const { tg_id } = useParams()
-  const userId = tg_id || 0
+  const { tg_id } = useParams();
+  const userId = tg_id || 0;
 
-  const [images, setImages] = useState([])
-  const [price, setPrice] = useState('')
-  const [title, setTitle] = useState('')
-  const [city, setCity] = useState('')
-  const [description, setDescription] = useState('')
+  const [images, setImages] = useState([]);
+  const [price, setPrice] = useState("");
+  const [title, setTitle] = useState("");
+  const [city, setCity] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files)
-    const newImages = files.slice(0, 5 - images.length)
-    setImages((prev) => [...prev, ...newImages])
-  }
+    const files = Array.from(e.target.files);
+    const newImages = files.slice(0, 5 - images.length);
+    setImages((prev) => [...prev, ...newImages]);
+  };
 
   const removeImage = (index) => {
-    setImages(images.filter((_, i) => i !== index))
-  }
+    setImages(images.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Проверка заполненности обязательных полей
     if (!price || !title || !city || !description) {
-      alert('Пожалуйста, заполните все обязательные поля!')
-      return
+      alert("Пожалуйста, заполните все обязательные поля!");
+      return;
     }
 
     try {
-      await db.createOfferWithImages(tg_id, title, description, price, images)
-      alert('Объявление успешно создано!')
+      await db.createOfferWithImages(tg_id, title, description, price, images);
+      alert("Объявление успешно создано!");
 
       // Очистка полей после успешного создания
-      setImages([])
-      setPrice('')
-      setTitle('')
-      setCity('')
-      setDescription('')
+      setImages([]);
+      setPrice("");
+      setTitle("");
+      setCity("");
+      setDescription("");
     } catch (error) {
-      console.error(error)
-      alert('Не удалось создать объявление:(')
+      console.error(error);
+      alert("Не удалось создать объявление:(");
     }
-  }
+  };
 
-  const isFormValid = price && title && city && description
+  const isFormValid = price && title && city && description;
 
   return (
     <div className={styles.main}>
@@ -57,17 +57,17 @@ const Create = () => {
         <div className={styles.imageUpload}>
           <label className={styles.bigImageLabel}>
             <input
-              type='file'
-              accept='image/*'
+              type="file"
+              accept="image/*"
               multiple
               onChange={handleImageChange}
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               disabled={images.length >= 5}
             />
             {images.length < 5 && <span className={styles.bigPlus}>＋</span>}
             {images.length > 0 && (
               <div className={styles.imageOverlay}>
-                {' '}
+                {" "}
                 {/* Контейнер для затемнения и контента */}
                 <button
                   className={styles.removeImageButton}
@@ -77,7 +77,7 @@ const Create = () => {
                 </button>
                 <img
                   src={URL.createObjectURL(images[0])}
-                  alt='Uploaded'
+                  alt="Uploaded"
                   className={styles.bigPreview}
                 />
               </div>
@@ -111,32 +111,32 @@ const Create = () => {
         <form onSubmit={handleSubmit} className={styles.form1}>
           <div className={styles.priceInputContainer}>
             <input
-              type='text'
-              placeholder='Введите стоимость'
+              type="text"
+              placeholder="Введите стоимость"
               value={`${price}`}
               onChange={(e) => setPrice(e.target.value)}
               className={styles.input1}
             />
             <span className={styles.currencySymbol}>₽</span>
           </div>
-          <input
+          {/* <input
             type='text'
             placeholder='Введите название товара'
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className={styles.input2}
             required
-          />
+          /> */}
           <input
-            type='text'
-            placeholder='Введите город'
+            type="text"
+            placeholder="Введите город"
             value={city}
             onChange={(e) => setCity(e.target.value)}
             className={styles.input3}
             required
           />
           <textarea
-            placeholder='Добавьте описание'
+            placeholder="Добавьте описание"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className={styles.textarea}
@@ -144,7 +144,7 @@ const Create = () => {
           />
 
           <button
-            type='submit'
+            type="submit"
             className={styles.button}
             disabled={!isFormValid}
           >
@@ -155,7 +155,7 @@ const Create = () => {
 
       <Menu tg_id={userId} />
     </div>
-  )
-}
+  );
+};
 
-export default Create
+export default Create;

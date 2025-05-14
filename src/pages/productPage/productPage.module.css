@@ -1,5 +1,5 @@
 .main {
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
   margin: 0;
   padding: 0;
   min-height: 100dvh;
@@ -56,7 +56,7 @@ p {
   background-color: white;
   padding: 10px;
   bottom: 0;
-  z-index: 1;
+  z-index: 100;
   justify-content: center;
   align-items: center;
   display: flex;
@@ -101,16 +101,19 @@ p {
 .cal {
   background: white;
   border: 0px solid #a0a096;
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
   line-height: 1.125em;
 }
 
 .infoText {
   font-weight: 400;
-  font-size: 25px; /* Размер шрифта */
-  margin: 0; /* Убираем внешний отступ */
-  padding: 0; /* Убираем внутренний отступ */
-  line-height: 1.7;
+  font-size: 18px;
+  margin: 0;
+  padding: 0;
+  line-height: 1.4;
+  text-align: left;
+  word-break: break-word; /* Перенос длинных слов */
+  overflow-wrap: break-word; /* Перенос слов с переносом */
 }
 
 .infoBlockWithHeart {
@@ -151,42 +154,6 @@ strong {
   margin-bottom: 10px; 
 } */
 
-.landlordContainer {
-  width: 87%;
-  margin: 15px auto;
-  padding-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* background-color: #eeeeee31; */
-  border-radius: 12px;
-}
-
-.landlordPhoto {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 16px;
-}
-
-.landlordInfo {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  font-size: 16px;
-  flex: 1;
-  margin-left: 10px;
-  max-width: 45%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.landlordName {
-  margin: 0;
-  font-weight: 400;
-  font-size: 14px;
-}
-
 .contactButton {
   padding: 8px 12px;
   background-color: #ffffff;
@@ -215,6 +182,7 @@ strong {
 }
 
 .descriptionText {
+  text-indent: 2em;
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
@@ -229,4 +197,58 @@ strong {
 
 .rentButton {
   width: 87%;
+  margin-top: 10px;
+}
+
+.landlordContainer {
+  width: 87%;
+  margin: 15px auto;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f8f8;
+  border-radius: 12px;
+}
+
+.landlordPhoto {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.landlordInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 16px;
+  flex: 1;
+  margin-left: 15px;
+  overflow: hidden;
+}
+
+.landlordName {
+  margin: 0;
+  font-weight: 500;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+}
+
+.contactButton {
+  padding: 8px 16px;
+  background-color: #ffffff;
+  color: #006ffd;
+  border: 1px solid #006ffd;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.contactButton:hover {
+  background-color: #006ffd;
+  color: white;
 }
