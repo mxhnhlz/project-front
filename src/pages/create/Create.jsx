@@ -28,7 +28,7 @@ const Create = () => {
     e.preventDefault();
 
     // Проверка заполненности обязательных полей
-    if (!price || !title || !city || !description) {
+    if (!price || !title || !description) {
       alert("Пожалуйста, заполните все обязательные поля!");
       return;
     }
@@ -49,7 +49,7 @@ const Create = () => {
     }
   };
 
-  const isFormValid = price && title && city && description;
+  const isFormValid = price && title && description;
 
   return (
     <div className={styles.main}>
@@ -119,22 +119,22 @@ const Create = () => {
             />
             <span className={styles.currencySymbol}>₽</span>
           </div>
-          {/* <input
-            type='text'
-            placeholder='Введите название товара'
+          <input
+            type="text"
+            placeholder="Введите название товара"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className={styles.input2}
             required
-          /> */}
-          <input
+          />
+          {/* <input
             type="text"
             placeholder="Введите город"
             value={city}
             onChange={(e) => setCity(e.target.value)}
             className={styles.input3}
             required
-          />
+          /> */}
           <textarea
             placeholder="Добавьте описание"
             value={description}
