@@ -115,23 +115,54 @@ function Profile() {
         ) : user ? (
           <>
             <div style={{ marginBottom: "20px" }}>
-              <img
-                src={`${process.env.REACT_APP_API_IMAGE_URL}${user.image}`}
-                alt={Avatar}
-                style={{
-                  width: "82px",
-                  height: "82px",
-                  objectFit: "cover",
-                  borderRadius: "32px",
-                }}
-              ></img>
+              <a
+                href={`https://t.me/${user.tg_name}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: "inline-block" }}
+              >
+                <img
+                  src={`${process.env.REACT_APP_API_IMAGE_URL}${user.image}`}
+                  alt={Avatar}
+                  href={`https://t.me/${user.tg_name}`}
+                  style={{
+                    width: "82px",
+                    height: "82px",
+                    objectFit: "cover",
+                    borderRadius: "32px",
+                  }}
+                ></img>
+              </a>
             </div>
-            <p
-              style={{ fontWeight: 700, fontSize: "16px", marginBottom: "5px" }}
+            <a
+              href={`https://t.me/${user.tg_name}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                textDecoration: "none",
+                color: "inherit", // Сохраняем текущий цвет текста
+              }}
             >
-              {user.name}
-            </p>
-            <span className={styles.userName}>@{user.tg_name}</span>
+              <p
+                style={{
+                  fontWeight: 700,
+                  fontSize: "16px",
+                  marginBottom: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                {user.name}
+              </p>
+            </a>
+            <a
+              href={`https://t.me/${user.tg_name}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.userName}
+              style={{ display: "inline-block" }}
+            >
+              @{user.tg_name}
+            </a>
             {/* Вывод рейтинга */}
             <Stars avg={avg} />
             <>
