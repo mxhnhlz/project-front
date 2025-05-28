@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Menu from "../../components/menu/Menu";
 import styles from "./rentalHistory.module.css";
 import { Button } from "@mui/material";
@@ -8,6 +8,7 @@ import CartButton from "../../components/icons/cartButton";
 import db from "../../../api/db";
 
 function RentalHistory() {
+  const navigate = useNavigate();
   const { tg_id } = useParams();
   const userId = tg_id || 0;
   const [rents, setRents] = useState([]);
@@ -30,7 +31,7 @@ function RentalHistory() {
   }, [userId]);
 
   const handleProductClick = (product) => {
-    console.log("Выбран продукт:", product);
+    navigate(`/product/${userId}/${product.offer_id}`, { state: { product } });
   };
 
   const handleRentButtonClick = (product) => {
@@ -54,9 +55,6 @@ function RentalHistory() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <button className={styles.cartButton}>
-            <CartButton />
-          </button>
         </div>
       </div>
       {loading ? (
@@ -86,7 +84,7 @@ function RentalHistory() {
                     <h1>{rent.title}</h1>
                     <p className={styles.productRent}>
                       {rent.user_id === userId
-                        ? "Арендовано у"
+                        ? "Арендовано вами"
                         : "Арендовано у вас"}
                     </p>
                     <p className={styles.productRent}>
@@ -106,6 +104,7 @@ function RentalHistory() {
                     <Button
                       className={styles.rentButton}
                       variant="outlined"
+                      href={`https://telegram.me/${rent.tg_name}`}
                       sx={{
                         borderRadius: "12px",
                         borderColor: "#006FFD",

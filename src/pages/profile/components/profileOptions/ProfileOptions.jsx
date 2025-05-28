@@ -39,9 +39,9 @@ function ProfileOptions({ userId, currentUserId }) {
         </div>
         {currentUserId === userId ? (
           <div>
-            <div className={styles.buttonItem} onClick={handleNewRentsClick}>
+            {/* <div className={styles.buttonItem} onClick={handleNewRentsClick}>
               Входящие аренды <RightArrow />
-            </div>
+            </div> */}
             <div
               className={styles.buttonItem}
               onClick={handleCurrentRentalsClick}

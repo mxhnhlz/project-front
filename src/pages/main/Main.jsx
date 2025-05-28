@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@mui/material";
-import MyCalendar from "./calendar/calendar";
 import styles from "./main.module.css";
 import { useParams, useNavigate } from "react-router-dom";
-import SearchIcon from "../components/icons/SearchIcon";
-import CartButton from "../components/icons/cartButton";
 import Menu from "../components/menu/Menu";
 import db from "../../api/db"; // Импортируем функцию для загрузки данных
 import Search from "../components/search/Search";
@@ -12,9 +9,7 @@ function Main() {
   const navigate = useNavigate();
   const { tg_id } = useParams();
   const userId = tg_id || 0;
-  const [openCalendar, setOpenCalendar] = useState(null);
   const [items, setItems] = useState([]);
-  const [filteredItems, setFilteredItems] = useState([]); //TODO: продумать фильтрацию
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true); // Есть ли еще элементы для загрузки
   const [lastItemId, setLastItemId] = useState(0);

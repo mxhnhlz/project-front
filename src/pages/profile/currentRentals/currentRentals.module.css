@@ -1,5 +1,5 @@
 .main {
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
   margin: 0;
   padding: 0;
   min-height: 100dvh;
@@ -19,8 +19,8 @@ p {
   justify-content: center;
   align-items: center;
   width: 100%;
-  flex-grow: 1;
   background-color: #ffffff;
+  flex-grow: 1;
 }
 
 .products {
@@ -68,12 +68,20 @@ p {
   font-weight: bold;
   margin-top: 15px;
   margin-bottom: 5px;
+  white-space: nowrap; /* Запрет перенос строк */
+  overflow: hidden; /* Скрывает содержимое, выходящее за границы */
+  text-overflow: ellipsis; /* Добавляет многоточие в конце */
+  width: 100%; /* Или конкретная ширина, чтобы было откуда обрезать */
 }
 
 .productName p {
   margin: 0;
   font-size: 12px;
   color: #71727a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 
 .productStats {

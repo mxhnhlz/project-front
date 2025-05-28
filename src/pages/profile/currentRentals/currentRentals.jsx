@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+
 import Menu from "../../components/menu/Menu";
 import styles from "./currentRentals.module.css";
 import { Button } from "@mui/material";
@@ -8,6 +9,7 @@ import CartButton from "../../components/icons/cartButton";
 import db from "../../../api/db";
 
 function CurrentRentals() {
+  const navigate = useNavigate();
   const { tg_id } = useParams();
   const userId = tg_id || 0;
   const [rents, setRents] = useState([]);
@@ -30,7 +32,7 @@ function CurrentRentals() {
   }, [userId]);
 
   const handleProductClick = (product) => {
-    console.log("Выбран продукт:", product);
+    navigate(`/product/${userId}/${product.offer_id}`, { state: { product } });
   };
 
   return (
@@ -49,9 +51,6 @@ function CurrentRentals() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <button className={styles.cartButton}>
-            <CartButton />
-          </button>
         </div>
       </div>
       <div className={styles.products}>
@@ -83,7 +82,7 @@ function CurrentRentals() {
                     <h1>{rent.title}</h1>
                     <p className={styles.productRent}>
                       {rent.user_id === userId
-                        ? "Арендовано у"
+                        ? "Арендовано вами"
                         : "Арендовано у вас"}
                     </p>
                     <p className={styles.productRent}>
